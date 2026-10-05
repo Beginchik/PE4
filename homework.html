@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inviting and offering — interactive practice</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/nunito@latest/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/nunito@latest/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/nunito@latest/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/nunito@latest/800.css">
+<style>
+:root{
+  --bg:#f6f7fb; --card:#ffffff; --ink:#20263a; --muted:#5b6478;
+  --brand:#4f6df5; --brand-soft:#eef1ff; --ok:#1e9e6a; --ok-bg:#e5f6ee;
+  --err:#e5484d; --err-bg:#fdecec; --line:#e3e6ee; --radius:16px;
+  --shadow:0 10px 30px rgba(32,38,58,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,-apple-system,Segoe UI,sans-serif;font-size:17px;line-height:1.55}
+h1{font-size:20px;margin:0;font-weight:800}
+h2{font-size:26px;margin:4px 0 12px;font-weight:800}
+h3{font-size:18px;margin:0 0 8px;font-weight:800}
+p{margin:6px 0}
+.sub{margin:0;font-size:13px;color:var(--muted)}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1000px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.dots{display:flex;gap:6px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%;background:#d5dbeb;transition:.2s}
+.dot.on{background:#b9c4f7}
+.dot.cur{background:var(--brand);transform:scale(1.3)}
+main{max-width:1000px;margin:0 auto;padding:22px 16px 120px}
+.screen{display:none}
+.screen.active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.stage{letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--brand);font-weight:800;margin:0}
+.instr{background:#f0f4ff;border-left:4px solid var(--brand);padding:12px 14px;border-radius:10px;font-size:16px;margin:10px 0 16px}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
+/* buttons */
+.btn{border:0;border-radius:12px;font-weight:800;cursor:pointer;padding:12px 18px;min-height:44px;font-size:16px;font-family:inherit;transition:transform .12s,background .15s,box-shadow .15s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--brand);color:#fff;box-shadow:0 6px 16px rgba(79,109,245,.35)}
+.btn.ghost{background:#eef1f8;color:var(--ink)}
+.btn.small{padding:8px 14px;min-height:38px;font-size:14px}
+.btn.tiny{padding:4px 10px;min-height:32px;font-size:13px;border-radius:10px;background:var(--brand-soft);color:var(--brand)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:focus-visible,.chip:focus-visible,.chopt:focus-visible,.sup:focus-visible{outline:3px solid #94a7ff;outline-offset:2px}
+/* clickable support words */
+.sup{color:var(--brand);text-decoration:underline dotted 2px;text-underline-offset:3px;cursor:pointer;border-radius:4px;font-weight:700;background:none;border:0;padding:0 2px;font-family:inherit;font-size:inherit}
+.sup:hover,.sup:focus-visible{background:var(--brand-soft)}
+/* word bank / chips */
+.bank{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px;padding:12px;background:#fff;border-radius:14px;box-shadow:var(--shadow)}
+.bank.pulse{outline:3px solid #f59e0b;outline-offset:4px}
+.chip{background:var(--brand-soft);border:2px solid transparent;border-radius:12px;padding:10px 14px;font-weight:800;min-height:44px;font-family:inherit;font-size:16px;cursor:pointer;color:var(--ink);display:inline-flex;align-items:center;gap:8px;transition:.15s}
+.chip.sel{border-color:var(--brand);background:#fff;box-shadow:0 4px 12px rgba(79,109,245,.25)}
+.chip.used{opacity:.45;text-decoration:line-through;pointer-events:none}
+.optletter{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--brand);color:#fff;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:0 0 24px}
+/* gaps */
+.gap{display:inline-block;min-width:6ch;min-height:1.6em;border-bottom:2px solid #c9d2f0;text-align:center;padding:0 8px;vertical-align:bottom;border-radius:4px}
+.gap.wide{min-width:16ch}
+.gapblock{display:block;min-height:42px;border-bottom:2px dashed #b9c3e8;margin:8px 0;padding:6px 8px;border-radius:6px}
+.gap.ok,.gapblock.ok{background:var(--ok-bg);color:#116b49;font-weight:800;border-bottom:2px solid var(--ok)}
+.gap.example,.gapblock.example{color:#8a93a8;font-style:italic;border-bottom-color:#dfe3ee;background:#f6f8fc}
+.err{animation:shake .4s;background:var(--err-bg)!important;color:var(--err)!important;border-bottom-color:var(--err)!important}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+sup.num, .num{color:var(--brand);font-weight:800;margin-right:2px}
+.who{font-weight:800;display:inline-block;min-width:1.4em}
+/* conversations */
+.convgrid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:860px){.convgrid{grid-template-columns:1fr 1fr}}
+.conv{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+.conv p{margin:8px 0}
+/* emails */
+.mails{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin-top:14px}
+.mailbar{background:linear-gradient(#e9ebf0,#d8dbe2);border-radius:12px 12px 0 0;padding:9px 12px;display:flex;gap:6px;align-items:center}
+.mdot{width:12px;height:12px;border-radius:50%;background:#b6bac4}
+.mailbar svg{margin:0 auto;width:22px;height:22px}
+.mailbody{background:#fbfbfd;border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:14px 16px;min-height:170px}
+/* listening inputs */
+.gapin{width:9ch;max-width:34vw;border:0;border-bottom:2px solid #c9d2f0;background:transparent;font:inherit;text-align:center;padding:2px 4px;min-height:34px;color:var(--ink);border-radius:4px}
+.gapin:focus{outline:3px solid #94a7ff;outline-offset:1px;background:#fff}
+.gapin.ok{background:var(--ok-bg);border-bottom:2px solid var(--ok);color:#116b49;font-weight:800}
+.gapin.example{color:#8a93a8;font-style:italic;border-bottom-color:#dfe3ee}
+/* choose options */
+.chopt{border:2px solid #dfe5f5;border-radius:999px;padding:8px 14px;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;min-height:40px;margin:2px 1px;color:var(--ink);transition:.15s}
+.chopt.ok{border-color:var(--ok);background:var(--ok-bg);color:#116b49}
+.slash{color:#b9c3e8;font-weight:800;margin:0 2px}
+/* audio box */
+.audiobox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:14px;margin:12px 0}
+.audionote{color:var(--err);font-weight:700;font-size:14px}
+.partb{background:#f4fbf7;border:1px solid #cdeeda;border-radius:14px;padding:14px 16px;margin-top:16px}
+/* exercise footer bar */
+.exbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px}
+.result{min-height:24px;font-weight:800;color:var(--ink);margin:0}
+/* writing */
+textarea{width:100%;min-height:180px;border:2px solid var(--line);border-radius:14px;padding:14px;font:inherit;background:#fff;resize:vertical}
+textarea:focus{outline:3px solid #94a7ff;border-color:var(--brand)}
+.count{font-size:14px;color:var(--muted);font-weight:700}
+.checklist{list-style:none;padding:0;margin:12px 0}
+.checklist li{padding:6px 0 6px 32px;position:relative}
+.checklist li::before{content:"✓";position:left;left:0;top:6px;width:24px;height:24px;border-radius:50%;background:var(--ok-bg);color:var(--ok);font-weight:800;display:inline-flex;align-items:center;justify-content:center;position:absolute;left:0}
+/* navbar */
+.navbar{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line)}
+.nav-in{max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 16px}
+.prog{font-weight:800;color:var(--muted);font-size:14px}
+/* vocab modal */
+.overlay{position:fixed;inset:0;background:rgba(18,24,48,.5);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
+.overlay[hidden]{display:none}
+.vcard{background:#fff;border-radius:20px;max-width:430px;width:100%;padding:20px;position:relative;max-height:88vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.vclose{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:12px;border:0;background:#eef1f8;font-size:18px;cursor:pointer;font-weight:800}
+.vimg{background:#f4f7ff;border-radius:16px;padding:10px;display:flex;justify-content:center}
+.vimg svg{width:96px;height:96px}
+.vimgdesc{font-size:13px;color:var(--muted);text-align:center;margin:6px 0 10px}
+.vmeta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:15px;color:var(--muted)}
+.vmeta b{color:var(--ink)}
+.vdef{font-size:16px}
+.vex{margin:8px 0;padding-left:20px;color:var(--muted);font-size:15px}
+.vtrans{background:#fff8e6;border-radius:10px;padding:10px 12px;margin-top:10px;font-weight:700}
+@media(max-width:600px){
+  body{font-size:16px}
+  h2{font-size:22px}
+  .gap.wide{min-width:12ch}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div>
+      <h1>Inviting and offering</h1>
+      <p class="sub">Interactive practice • Would you like…? • Elementary</p>
+    </div>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ SCREEN 1 : EX 1a ============ -->
+<section class="screen" id="s1">
+  <p class="stage">Exercise 1a</p>
+  <h2>Inviting and offering</h2>
+  <p class="instr">Choose words from the box and put them in gaps <b>2–10</b>. Gap 1 is the example.
+  Tap a word, then tap the gap. Words with a <span class="sup" data-vocab="match" role="button" tabindex="0">dotted underline</span> open a help card.</p>
+
+  <div class="bank" id="bank1" aria-label="Word box"></div>
+
+  <div class="convgrid">
+    <div class="conv">
+      <p><span class="who">A</span> <sup class="num">1</sup><span class="gap example">Would</span> you like to come to a basketball <span class="sup" role="button" tabindex="0" data-vocab="match">match</span> on Saturday?</p>
+      <p><span class="who">B</span> What <sup class="num">2</sup><span class="gap" data-gap="g2"></span>’s the match?</p>
+      <p><span class="who">A</span> <sup class="num">3</sup><span class="gap" data-gap="g3"></span>’s at 7.30 at the <span class="sup" role="button" tabindex="0" data-vocab="sports_centre">sports centre</span>.</p>
+      <p><span class="who">B</span> <span class="sup" role="button" tabindex="0" data-vocab="id_love_to">I’d love to</span>. Thanks.</p>
+      <p><span class="who">A</span> Would you <sup class="num">4</sup><span class="gap" data-gap="g4"></span> to meet for a drink first?</p>
+      <p><span class="who">B</span> Yes, OK. <sup class="num">5</sup><span class="gap" data-gap="g5"></span> meet at 6.30 in the bar.</p>
+      <p><span class="who">A</span> OK, <sup class="num">6</sup><span class="gap" data-gap="g6"></span> you there.</p>
+    </div>
+    <div class="conv">
+      <p><span class="who">A</span> Hi John. <sup class="num">7</sup><span class="gap" data-gap="g7"></span> you hungry?</p>
+      <p><span class="who">B</span> No, but I <sup class="num">8</sup><span class="gap" data-gap="g8"></span> like a drink.</p>
+      <p><span class="who">A</span> <sup class="num">9</sup><span class="gap" data-gap="g9"></span> would you like to drink?</p>
+      <p><span class="who">B</span> A coffee, please.</p>
+      <p><span class="who">A</span> Milk and <sup class="num">10</sup><span class="gap" data-gap="g10"></span>?</p>
+      <p><span class="who">B</span> Just milk, please.</p>
+    </div>
+  </div>
+
+  <div class="exbar">
+    <button class="btn ghost small" id="reset1" type="button">Reset exercise</button>
+    <p class="result" id="res1" role="status"></p>
+  </div>
+</section>
+
+<!-- ============ SCREEN 2 : EX 1b ============ -->
+<section class="screen" id="s2">
+  <p class="stage">Exercise 1b</p>
+  <h2>Complete the emails</h2>
+  <p class="instr">Tap a sentence (<b>a–g</b>), then tap a gap in the emails. Sentence <b>c</b> is the example (1).</p>
+
+  <div class="bank" id="bank2" aria-label="Sentence options"></div>
+
+  <div class="mails">
+    <div class="mail">
+      <div class="mailbar"><span class="mdot"></span><span class="mdot"></span><span class="mdot"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2" fill="none" stroke="#8a8f9c" stroke-width="2"/><path d="M2 7l10 7 10-7" fill="none" stroke="#8a8f9c" stroke-width="2"/></svg>
+      </div>
+      <div class="mailbody">
+        <p>Hi Marta,</p>
+        <p><sup class="num">1</sup><span class="gapblock example">Would you like to come to my house for lunch on Saturday?</span></p>
+        <p><span class="sup" role="button" tabindex="0" data-vocab="best_wishes">Best wishes</span>,</p>
+        <p>Angela</p>
+      </div>
+    </div>
+    <div class="mail">
+      <div class="mailbar"><span class="mdot"></span><span class="mdot"></span><span class="mdot"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2" fill="none" stroke="#8a8f9c" stroke-width="2"/><path d="M2 7l10 7 10-7" fill="none" stroke="#8a8f9c" stroke-width="2"/></svg>
+      </div>
+      <div class="mailbody">
+        <p>Hi Angela,</p>
+        <p><sup class="num">2</sup><span class="gapblock" data-gap="m2"></span></p>
+        <p><sup class="num">3</sup><span class="gapblock" data-gap="m3"></span></p>
+        <p>Marta</p>
+      </div>
+    </div>
+    <div class="mail">
+      <div class="mailbar"><span class="mdot"></span><span class="mdot"></span><span class="mdot"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2" fill="none" stroke="#8a8f9c" stroke-width="2"/><path d="M2 7l10 7 10-7" fill="none" stroke="#8a8f9c" stroke-width="2"/></svg>
+      </div>
+      <div class="mailbody">
+        <p>Hi Marta,</p>
+        <p><sup class="num">4</sup><span class="gapblock" data-gap="m4"></span></p>
+        <p><sup class="num">5</sup><span class="gapblock" data-gap="m5"></span></p>
+        <p>Angela</p>
+      </div>
+    </div>
+    <div class="mail">
+      <div class="mailbar"><span class="mdot"></span><span class="mdot"></span><span class="mdot"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2" fill="none" stroke="#8a8f9c" stroke-width="2"/><path d="M2 7l10 7 10-7" fill="none" stroke="#8a8f9c" stroke-width="2"/></svg>
+      </div>
+      <div class="mailbody">
+        <p>Hi Angela,</p>
+        <p><sup class="num">6</sup><span class="gapblock" data-gap="m6"></span></p>
+        <p><sup class="num">7</sup><span class="gapblock" data-gap="m7"></span></p>
+        <p>Love,</p>
+        <p>Marta</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="exbar">
+    <button class="btn ghost small" id="reset2" type="button">Reset exercise</button>
+    <p class="result" id="res2" role="status"></p>
+  </div>
+</section>
+
+<!-- ============ SCREEN 3 : EX 2 PRONUNCIATION ============ -->
+<section class="screen" id="s3">
+  <p class="stage">Exercise 2 • Pronunciation</p>
+  <h2>Sentence rhythm</h2>
+  <p class="instr"><b>a</b> Listen to track 9.5 and complete sentences <b>2–6</b>. Type the missing words and press <b>Enter</b> to check. Sentence 1 is the example.</p>
+
+  <div class="audiobox">
+    <button class="btn primary" id="playBtn" type="button">▶ Play track 9.5</button>
+    <span style="color:var(--muted);font-weight:700;font-size:14px">audio: assets/audio/pe5/9.5.mp3</span>
+  </div>
+  <p class="audionote" id="audioNote" hidden>Audio file not found. Check that the folder “assets/audio/pe5” with “9.5.mp3” is next to this page.</p>
+
+  <div class="card">
+    <p><span class="num">1</span> Would you <input class="gapin example" value="like" disabled> a <input class="gapin example" value="pizza" disabled>?</p>
+    <p><span class="num">2</span> Would you <input class="gapin" data-id="i2a" autocomplete="off" autocapitalize="off" spellcheck="false"> to <input class="gapin" data-id="i2b" autocomplete="off" autocapitalize="off" spellcheck="false"> for <input class="gapin" data-id="i2c" autocomplete="off" autocapitalize="off" spellcheck="false">?</p>
+    <p><span class="num">3</span> Would you <input class="gapin" data-id="i3a" autocomplete="off" autocapitalize="off" spellcheck="false"> <input class="gapin" data-id="i3b" autocomplete="off" autocapitalize="off" spellcheck="false"> to <input class="gapin" data-id="i3c" autocomplete="off" autocapitalize="off" spellcheck="false">?</p>
+    <p><span class="num">4</span> Would you <input class="gapin" data-id="i4a" autocomplete="off" autocapitalize="off" spellcheck="false"> to <input class="gapin" data-id="i4b" autocomplete="off" autocapitalize="off" spellcheck="false"> to the <input class="gapin" data-id="i4c" autocomplete="off" autocapitalize="off" spellcheck="false">?</p>
+    <p><span class="num">5</span> Would you <input class="gapin" data-id="i5a" autocomplete="off" autocapitalize="off" spellcheck="false"> to play <input class="gapin" data-id="i5b" autocomplete="off" autocapitalize="off" spellcheck="false">?</p>
+    <p><span class="num">6</span> Would you <input class="gapin" data-id="i6a" autocomplete="off" autocapitalize="off" spellcheck="false"> <input class="gapin" data-id="i6b" autocomplete="off" autocapitalize="off" spellcheck="false"> or a <input class="gapin" data-id="i6c" autocomplete="off" autocapitalize="off" spellcheck="false">?</p>
+  </div>
+
+  <div class="partb">
+    <h3>b Listen again and repeat. Copy the rhythm.</h3>
+    <button class="btn ghost small" id="playBtn2" type="button">▶ Play again</button>
+    <p>Repeat each question aloud after the audio. Stress the important words: <i>Would you <b>LIKE</b> a <b>PIZZA</b>?</i></p>
+  </div>
+
+  <div class="exbar">
+    <button class="btn ghost small" id="reset3" type="button">Reset exercise</button>
+    <p class="result" id="res3" role="status"></p>
+  </div>
+</section>
+
+<!-- ============ SCREEN 4 : EX 3 USEFUL PHRASES ============ -->
+<section class="screen" id="s4">
+  <p class="stage">Exercise 3</p>
+  <h2>Useful phrases</h2>
+  <p class="instr">Complete conversations <b>2–5</b> with a phrase from the list. Tap a phrase, then tap the gap. Phrase 1 is the example.</p>
+
+  <div class="bank" id="bank4" aria-label="Phrase box"></div>
+
+  <div class="conv">
+    <p><span class="num">1</span> <span class="who">A</span> Hi, Zak. <span class="gap example">I’d like to ask you something</span>. Would you like to come to a party on Friday? &nbsp; <span class="who">B</span> Yes, I’d love to! Where is it?</p>
+    <p><span class="num">2</span> <span class="who">A</span> Would you like to come to the <span class="sup" role="button" tabindex="0" data-vocab="match">match</span> with me on Saturday? &nbsp; <span class="who">B</span> <span class="gap wide" data-gap="q2"></span>. What time does it start?</p>
+    <p><span class="num">3</span> <span class="who">A</span> <span class="gap wide" data-gap="q3"></span>? &nbsp; <span class="who">B</span> No, thanks. I’m not very <span class="sup" role="button" tabindex="0" data-vocab="hungry">hungry</span>.</p>
+    <p><span class="num">4</span> <span class="who">A</span> <span class="gap wide" data-gap="q4"></span> at the <span class="sup" role="button" tabindex="0" data-vocab="entrance">entrance</span> to the cinema. &nbsp; <span class="who">B</span> OK. See you there.</p>
+    <p><span class="num">5</span> <span class="who">A</span> I don’t want breakfast, thanks. I don’t eat in the morning. &nbsp; <span class="who">B</span> Well, <span class="gap wide" data-gap="q5"></span>?</p>
+  </div>
+
+  <div class="exbar">
+    <button class="btn ghost small" id="reset4" type="button">Reset exercise</button>
+    <p class="result" id="res4" role="status"></p>
+  </div>
+</section>
+
+<!-- ============ SCREEN 5 : EX 4a WRITING ============ -->
+<section class="screen" id="s5">
+  <p class="stage">Exercise 4a • Writing</p>
+  <h2>Read and choose the correct phrase</h2>
+  <p class="instr">Read Elena’s email. In each pair (1–7), tap the phrase you think is correct.</p>
+
+  <div class="mail" style="max-width:760px">
+    <div class="mailbar"><span class="mdot"></span><span class="mdot"></span><span class="mdot"></span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2" fill="none" stroke="#8a8f9c" stroke-width="2"/><path d="M2 7l10 7 10-7" fill="none" stroke="#8a8f9c" stroke-width="2"/></svg>
+    </div>
+    <div class="mailbody" id="choiceRoot">
+      <p><sup class="num">1</sup><button class="chopt" type="button" data-item="c1" data-ok="1">Hi</button><span class="slash">/</span><button class="chopt" type="button" data-item="c1">Good morning</button> (your name),</p>
+      <p><sup class="num">2</sup><button class="chopt" type="button" data-item="c2" data-ok="1">Would</button><span class="slash">/</span><button class="chopt" type="button" data-item="c2">Do</button> you like <sup class="num">3</sup><button class="chopt" type="button" data-item="c3" data-ok="1">to come</button><span class="slash">/</span><button class="chopt" type="button" data-item="c3">come</button> to dinner <sup class="num">4</sup><button class="chopt" type="button" data-item="c4">in</button><span class="slash">/</span><button class="chopt" type="button" data-item="c4" data-ok="1">on</button> Friday? <sup class="num">5</sup><button class="chopt" type="button" data-item="c5" data-ok="1">I’m inviting</button><span class="slash">/</span><button class="chopt" type="button" data-item="c5">I invite</button> Isabel too.</p>
+      <p><sup class="num">6</sup><button class="chopt" type="button" data-item="c6" data-ok="1">Can you come</button><span class="slash">/</span><button class="chopt" type="button" data-item="c6">Can come you</button> at 7.30? I love <sup class="num">7</sup><button class="chopt" type="button" data-item="c7" data-ok="1">cooking</button><span class="slash">/</span><button class="chopt" type="button" data-item="c7">cook</button> Chinese food. Do you like it?</p>
+      <p>See you on Friday (I hope!).</p>
+      <p>Love,</p>
+      <p>Elena</p>
+    </div>
+  </div>
+
+  <div class="exbar">
+    <button class="btn ghost small" id="reset5" type="button">Reset exercise</button>
+    <p class="result" id="res5" role="status"></p>
+  </div>
+</section>
+
+<!-- ============ SCREEN 6 : EX 4b WRITING ============ -->
+<section class="screen" id="s6">
+  <p class="stage">Exercise 4b • Writing</p>
+  <h2>Write a reply to the invitation</h2>
+  <p class="instr">Write a reply to Elena’s <span class="sup" role="button" tabindex="0" data-vocab="invitation">invitation</span> (40–60 words). Accept or refuse politely. There is no right or wrong answer here — just write.</p>
+
+  <textarea id="replyBox" placeholder="Hi Elena,&#10;&#10;Thank you for your email! ..."></textarea>
+  <p class="count"><span id="wc">0</span> words</p>
+
+  <div class="card">
+    <h3>Checklist — before you finish, check:</h3>
+    <ul class="checklist">
+      <li>You answer the invitation clearly (yes or no).</li>
+      <li>You use at least two phrases from the lesson (e.g. <i>I’d love to</i>, <i>How about …?</i>).</li>
+      <li>You write 40–60 words.</li>
+      <li>You check spelling and punctuation.</li>
+    </ul>
+  </div>
+
+  <div class="exbar">
+    <button class="btn ghost small" id="reset6" type="button">Clear my text</button>
+    <p class="result"></p>
+  </div>
+</section>
+
+<!-- ============ SCREEN 7 : DONE ============ -->
+<section class="screen" id="s7">
+  <p class="stage">Finished</p>
+  <h2>Well done!</h2>
+  <p class="instr">You finished all the exercises. Here is your summary:</p>
+  <div class="card">
+    <ul id="scoreList" style="margin:0;padding-left:22px"></ul>
+  </div>
+  <p>Keep the new phrases in mind — try using them in English this week: <i>Would you like to…?</i>, <i>I’d love to</i>, <i>How about …?</i></p>
+  <p style="margin-top:14px"><button class="btn primary" id="startAgain" type="button">Start again</button></p>
+</section>
+
+</main>
+
+<nav class="navbar">
+  <div class="nav-in">
+    <button id="backBtn" class="btn ghost" type="button">← Back</button>
+    <span id="progText" class="prog">Screen 1 of 7</span>
+    <button id="nextBtn" class="btn primary" type="button">Next →</button>
+  </div>
+</nav>
+
+<!-- vocabulary support card -->
+<div class="overlay" id="overlay" hidden>
+  <div class="vcard" role="dialog" aria-modal="true" aria-labelledby="vTerm">
+    <button class="vclose" id="vClose" type="button" aria-label="Close">✕</button>
+    <div class="vimg" id="vImg"></div>
+    <p class="vimgdesc" id="vImgDesc"></p>
+    <h3 id="vTerm"></h3>
+    <p class="vmeta"><b id="vIpa"></b> <span id="vPos"></span> <button class="btn tiny" id="vAudio" type="button">🔊 Listen</button></p>
+    <p class="vdef" id="vDef"></p>
+    <ul class="vex" id="vEx"></ul>
+    <button class="btn ghost small" id="vTransBtn" type="button">View translation</button>
+    <p class="vtrans" id="vTrans" hidden></p>
+  </div>
+</div>
+
+<audio id="track95" src="assets/audio/pe5/9.5.mp3" preload="metadata"></audio>
+
+<script>
+"use strict";
+/* ---------- global state ---------- */
+var scores = {};
+var resetFns = [];
+
+/* ---------- sounds (WebAudio) ---------- */
+var AC = null;
+function ensureAC(){ if(!AC){ var C = window.AudioContext || window.webkitAudioContext; if(C) AC = new C(); } if(AC && AC.state === "suspended") AC.resume(); }
+function tone(freq, dur, type, vol, delay){
+  if(!AC) return;
+  var t = AC.currentTime + (delay || 0);
+  var o = AC.createOscillator(), g = AC.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(vol, t + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(AC.destination);
+  o.start(t); o.stop(t + dur + 0.05);
+}
+function chime(){ ensureAC(); tone(784, .14, "sine", .16); tone(1046, .2, "sine", .14, .1); }
+function blip(){ ensureAC(); tone(196, .14, "square", .09); }
+
+/* ---------- TTS (Web Speech API, en-GB) ---------- */
+var gbVoice = null;
+function pickVoice(){
+  if(!("speechSynthesis" in window)) return;
+  var vs = window.speechSynthesis.getVoices() || [];
+  gbVoice = null;
+  for(var i=0;i<vs.length;i++){ if(vs[i].lang === "en-GB"){ gbVoice = vs[i]; break; } }
+  if(!gbVoice){ for(var j=0;j<vs.length;j++){ if(vs[j].lang && vs[j].lang.indexOf("en") === 0){ gbVoice = vs[j]; break; } } }
+}
+if("speechSynthesis" in window){ pickVoice(); window.speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-GB"; u.rate = 0.95;
+  if(gbVoice) u.voice = gbVoice;
+  window.speechSynthesis.speak(u);
+}
+
+/* ---------- vocabulary data + SVG placeholders ---------- */
+function svgIcon(kind){
+  var S = {
+    ball: '<circle cx="32" cy="32" r="22" fill="#f59e0b"/><path d="M10 32h44M32 10v44M17 17c8 8 22 8 30 0M17 47c8-8 22-8 30 0" stroke="#92400e" stroke-width="2.5" fill="none"/>',
+    building: '<circle cx="52" cy="16" r="6" fill="#fbbf24"/><rect x="12" y="22" width="40" height="26" rx="3" fill="#7ea6f5"/><rect x="18" y="27" width="8" height="7" rx="1.5" fill="#eaf1ff"/><rect x="30" y="27" width="8" height="7" rx="1.5" fill="#eaf1ff"/><rect x="42" y="27" width="6" height="7" rx="1.5" fill="#eaf1ff"/><rect x="27" y="38" width="10" height="10" rx="2" fill="#334e8c"/>',
+    plate: '<path d="M26 14c0 4 3 4 3 8M34 12c0 4 3 4 3 8" stroke="#9aa7bd" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="32" cy="38" r="16" fill="#ffffff" stroke="#c3cad9" stroke-width="3"/><circle cx="32" cy="38" r="8" fill="#eef2f8"/>',
+    door: '<rect x="14" y="50" width="36" height="5" rx="2.5" fill="#d1c4e9"/><rect x="20" y="12" width="24" height="40" rx="10" fill="#8b5cf6"/><rect x="24" y="16" width="16" height="32" rx="7" fill="#a78bfa"/><circle cx="40" cy="34" r="2.5" fill="#fde68a"/>',
+    thumbs: '<rect x="38" y="30" width="14" height="18" rx="5" fill="#f9c095"/><rect x="18" y="28" width="20" height="20" rx="5" fill="#fcd9b8"/><rect x="22" y="12" width="9" height="20" rx="4.5" fill="#fcd9b8"/>',
+    coffee: '<path d="M26 14c0 4 3 4 3 8M34 12c0 4 3 4 3 8" stroke="#9aa7bd" stroke-width="2.5" fill="none" stroke-linecap="round"/><rect x="14" y="48" width="36" height="4" rx="2" fill="#e3e8f2"/><path d="M42 30h6a6 6 0 0 1 0 12h-6" fill="none" stroke="#c3cad9" stroke-width="3"/><rect x="18" y="26" width="24" height="20" rx="5" fill="#ffffff" stroke="#c3cad9" stroke-width="3"/>',
+    envelope: '<circle cx="50" cy="14" r="5" fill="#f472b6"/><rect x="12" y="18" width="40" height="28" rx="4" fill="#ffffff" stroke="#c3cad9" stroke-width="3"/><path d="M12 22l20 14 20-14" fill="none" stroke="#c3cad9" stroke-width="3"/>',
+    heart: '<path d="M32 50c-12-8-20-15-20-24 0-6 5-10 10-10 4 0 8 2 10 6 2-4 6-6 10-6 5 0 10 4 10 10 0 9-8 16-20 24z" fill="#f472b6"/>'
+  };
+  return '<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">' + (S[kind] || S.heart) + '</svg>';
+}
+var VOCAB = {
+  match: {term:"match", ipa:"/mætʃ/", pos:"noun", def:"a game between two teams or players", ex:["Would you like to come to a basketball match on Saturday?","The match starts at 7.30."], ru:"матч, игра", kind:"ball", desc:"Picture: a basketball game between two teams."},
+  sports_centre: {term:"sports centre", ipa:"/ˈspɔːts ˌsentə/", pos:"noun", def:"a place with rooms and halls for doing sport", ex:["The match is at 7.30 at the sports centre.","I go to the sports centre twice a week."], ru:"спортивный центр", kind:"building", desc:"Picture: a building for sport with a pool and a gym."},
+  hungry: {term:"hungry", ipa:"/ˈhʌŋɡri/", pos:"adjective", def:"wanting to eat something", ex:["No, thanks. I’m not very hungry.","Are you hungry? Let’s get a pizza."], ru:"голодный", kind:"plate", desc:"Picture: an empty plate and the smell of food."},
+  entrance: {term:"entrance", ipa:"/ˈentrəns/", pos:"noun", def:"the door or place where you go in", ex:["Let’s meet at the entrance to the cinema.","The entrance is next to the cafe."], ru:"вход", kind:"door", desc:"Picture: a door where people go in."},
+  id_love_to: {term:"I’d love to", ipa:"/aɪd lʌv tuː/", pos:"phrase", def:"a friendly way to say ‘yes’ to an invitation", ex:["Would you like to come to the match? — Yes, I’d love to!","I’d love to come to dinner. Thanks!"], ru:"с удовольствием", kind:"thumbs", desc:"Picture: a hand with thumb up — ‘yes, please!’"},
+  how_about: {term:"How about …?", ipa:"/haʊ əˈbaʊt/", pos:"phrase", def:"a way to make a suggestion", ex:["How about dinner?","Well, how about a coffee?"], ru:"как насчёт …?", kind:"coffee", desc:"Picture: a cup of coffee as a suggestion."},
+  invitation: {term:"invitation", ipa:"/ˌɪnvɪˈteɪn/", pos:"noun", def:"a message that asks you to come somewhere", ex:["Write a reply to the invitation.","Thank you for the invitation to your party."], ru:"приглашение", kind:"envelope", desc:"Picture: an envelope with an invitation inside."},
+  best_wishes: {term:"Best wishes", ipa:"/best ˈwɪz/", pos:"phrase (email ending)", def:"a friendly way to end an email or letter", ex:["Best wishes, Angela","See you soon. Best wishes, Tom"], ru:"с наилучшими пожеланиями", kind:"heart", desc:"Picture: a heart — friendly feelings at the end of a message."}
+};
+
+/* ---------- vocab modal ---------- */
+var overlay = document.getElementById("overlay");
+var vCurrent = null;
+function openVocab(key){
+  var v = VOCAB[key]; if(!v) return;
+  vCurrent = key;
+  document.getElementById("vImg").innerHTML = svgIcon(v.kind);
+  document.getElementById("vImgDesc").textContent = v.desc;
+  document.getElementById("vTerm").textContent = v.term;
+  document.getElementById("vIpa").textContent = v.ipa;
+  document.getElementById("vPos").textContent = "• " + v.pos;
+  document.getElementById("vDef").textContent = v.def;
+  var ul = document.getElementById("vEx"); ul.innerHTML = "";
+  v.ex.forEach(function(s){ var li = document.createElement("li"); li.textContent = s; ul.appendChild(li); });
+  document.getElementById("vTrans").textContent = v.ru;
+  document.getElementById("vTrans").hidden = true;
+  document.getElementById("vTransBtn").textContent = "View translation";
+  overlay.hidden = false;
+  document.getElementById("vClose").focus();
+}
+function closeVocab(){ overlay.hidden = true; }
+document.getElementById("vClose").addEventListener("click", closeVocab);
+overlay.addEventListener("click", function(e){ if(e.target === overlay) closeVocab(); });
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape" && !overlay.hidden) closeVocab();
+  var t = e.target;
+  if(t && t.classList && t.classList.contains("sup") && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); openVocab(t.dataset.vocab); }
+});
+document.getElementById("vTransBtn").addEventListener("click", function(){
+  var p = document.getElementById("vTrans");
+  p.hidden = !p.hidden;
+  this.textContent = p.hidden ? "View translation" : "Hide translation";
+});
+document.getElementById("vAudio").addEventListener("click", function(){ if(vCurrent) speak(VOCAB[vCurrent].term); });
+/* clickable support words (delegated) */
+document.addEventListener("click", function(e){
+  var s = e.target.closest ? e.target.closest(".sup") : null;
+  if(s){ e.stopPropagation(); e.preventDefault(); openVocab(s.dataset.vocab); }
+}, true);
+
+/* ---------- audio track 9.5 ---------- */
+var track = document.getElementById("track95");
+var playBtn = document.getElementById("playBtn");
+var playBtn2 = document.getElementById("playBtn2");
+function setPlayLabels(playing){
+  playBtn.textContent = playing ? "❚❚ Pause track 9.5" : "▶ Play track 9.5";
+  playBtn2.textContent = playing ? "❚❚ Pause" : "▶ Play again";
+}
+function toggleTrack(){
+  if(track.paused){ track.play().catch(function(){ document.getElementById("audioNote").hidden = false; }); }
+  else track.pause();
+}
+playBtn.addEventListener("click", toggleTrack);
+playBtn2.addEventListener("click", toggleTrack);
+track.addEventListener("play", function(){ setPlayLabels(true); });
+track.addEventListener("pause", function(){ setPlayLabels(false); });
+track.addEventListener("ended", function(){ setPlayLabels(false); });
+track.addEventListener("error", function(){ document.getElementById("audioNote").hidden = false; });
+
+/* ---------- interaction engine: tap-to-place ---------- */
+function setupPlacer(o){
+  var root = o.root, bank = root.querySelector(".bank");
+  var result = document.getElementById(o.resultId);
+  var gaps = Array.prototype.slice.call(root.querySelectorAll("[data-gap]"));
+  var state = {att:{}, locked:{}, correct:0};
+  var selected = null;
+  var labelOf = {}; o.items.forEach(function(it){ labelOf[it.id] = it.label; });
+
+  function chipById(id){ return bank.querySelector('[data-item="' + CSS.escape(id) + '"]'); }
+  function clearSel(){ if(selected){ var c = chipById(selected); if(c) c.classList.remove("sel"); } selected = null; }
+  function useChip(id){ var c = chipById(id); if(c){ c.classList.add("used"); c.disabled = true; } }
+  function finish(){
+    var allDone = gaps.every(function(g){ return state.locked[g.dataset.gap]; });
+    if(allDone){ result.textContent = state.correct + " out of " + gaps.length + " correct."; scores[o.name] = state.correct + " out of " + gaps.length; }
+    else result.textContent = "";
+  }
+  function buildBank(){
+    bank.innerHTML = "";
+    o.items.forEach(function(it){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "chip"; b.dataset.item = it.id;
+      b.innerHTML = (it.html ? it.html : it.label);
+      if(o.usedExample.indexOf(it.id) !== -1){ b.classList.add("used"); b.disabled = true; }
+      bank.appendChild(b);
+    });
+  }
+  bank.addEventListener("click", function(e){
+    if(e.target.closest(".sup")) return;           /* help-word inside an option */
+    var b = e.target.closest(".chip"); if(!b || b.disabled) return;
+    if(selected === b.dataset.item){ clearSel(); return; }
+    clearSel(); selected = b.dataset.item; b.classList.add("sel");
+  });
+  root.addEventListener("click", function(e){
+    if(e.target.closest(".sup")) return;
+    var g = e.target.closest("[data-gap]");
+    if(!g || state.locked[g.dataset.gap]) return;
+    if(!selected){ bank.classList.add("pulse"); setTimeout(function(){ bank.classList.remove("pulse"); }, 500); return; }
+    var id = selected; clearSel();
+    var gid = g.dataset.gap, ans = o.answers[gid];
+    if(id === ans){
+      g.textContent = labelOf[id]; g.classList.add("ok");
+      state.locked[gid] = true; state.correct++; useChip(id); chime();
+    }else{
+      state.att[gid] = (state.att[gid] || 0) + 1;
+      if(state.att[gid] >= 2){
+        g.textContent = labelOf[ans]; g.classList.add("ok"); state.locked[gid] = true; useChip(ans); blip();
+      }else{
+        g.classList.add("err"); blip();
+        setTimeout(function(){ g.classList.remove("err"); }, 450);
+      }
+    }
+    finish();
+  });
+  function reset(){
+    state.att = {}; state.locked = {}; state.correct = 0; clearSel();
+    delete scores[o.name]; result.textContent = "";
+    buildBank();
+    gaps.forEach(function(g){ g.textContent = ""; g.classList.remove("ok","err"); });
+  }
+  document.getElementById(o.resetId).addEventListener("click", reset);
+  resetFns.push(reset);
+  buildBank();
+}
+
+/* ---------- interaction engine: typed gaps ---------- */
+function setupInputs(o){
+  var root = o.root, result = document.getElementById(o.resultId);
+  var inputs = Array.prototype.slice.call(root.querySelectorAll("input[data-id]"));
+  var state = {att:{}, locked:{}, correct:0};
+  function norm(s){ return s.toLowerCase().trim().replace(/[^a-z0-9' ]/g,"").replace(/\s+/g," "); }
+  function finish(){
+    var allDone = inputs.every(function(i){ return state.locked[i.dataset.id]; });
+    if(allDone){ result.textContent = state.correct + " out of " + inputs.length + " correct."; scores[o.name] = state.correct + " out of " + inputs.length; }
+    else result.textContent = "";
+  }
+  inputs.forEach(function(inp){
+    var id = inp.dataset.id;
+    inp.addEventListener("input", function(){
+      if(state.locked[id]) return;
+      if(o.variants[id].indexOf(norm(inp.value)) !== -1){
+        state.locked[id] = true; state.correct++;
+        inp.classList.add("ok"); inp.disabled = true; chime(); finish();
+      }
+    });
+    inp.addEventListener("keydown", function(e){
+      if(e.key !== "Enter" || state.locked[id]) return;
+      e.preventDefault();
+      state.att[id] = (state.att[id] || 0) + 1;
+      if(state.att[id] >= 2){
+        inp.value = o.display[id]; inp.classList.add("ok"); inp.disabled = true;
+        state.locked[id] = true; blip(); finish();
+      }else{
+        inp.classList.add("err"); blip();
+        setTimeout(function(){ inp.classList.remove("err"); }, 450);
+      }
+    });
+  });
+  function reset(){
+    state.att = {}; state.locked = {}; state.correct = 0;
+    delete scores[o.name]; result.textContent = "";
+    inputs.forEach(function(i){ i.value = ""; i.disabled = false; i.classList.remove("ok","err"); });
+  }
+  document.getElementById(o.resetId).addEventListener("click", reset);
+  resetFns.push(reset);
+}
+
+/* ---------- interaction engine: choose one of two ---------- */
+function setupChoices(o){
+  var root = o.root, result = document.getElementById(o.resultId);
+  var ids = []; root.querySelectorAll(".chopt").forEach(function(b){ if(ids.indexOf(b.dataset.item) === -1) ids.push(b.dataset.item); });
+  var state = {att:{}, locked:{}, correct:0};
+  function optsOf(id){ return Array.prototype.slice.call(root.querySelectorAll('.chopt[data-item="' + id + '"]')); }
+  function finish(){
+    var allDone = ids.every(function(id){ return state.locked[id]; });
+    if(allDone){ result.textContent = state.correct + " out of " + ids.length + " correct."; scores[o.name] = state.correct + " out of " + ids.length; }
+    else result.textContent = "";
+  }
+  root.addEventListener("click", function(e){
+    var b = e.target.closest(".chopt"); if(!b || b.disabled) return;
+    var id = b.dataset.item; if(state.locked[id]) return;
+    var opts = optsOf(id);
+    if(b.dataset.ok){
+      state.locked[id] = true; state.correct++;
+      b.classList.add("ok"); opts.forEach(function(x){ x.disabled = true; }); chime();
+    }else{
+      state.att[id] = (state.att[id] || 0) + 1;
+      if(state.att[id] >= 2){
+        opts.forEach(function(x){ x.disabled = true; if(x.dataset.ok) x.classList.add("ok"); });
+        state.locked[id] = true; blip();
+      }else{
+        b.classList.add("err"); blip();
+        setTimeout(function(){ b.classList.remove("err"); }, 450);
+      }
+    }
+    finish();
+  });
+  function reset(){
+    state.att = {}; state.locked = {}; state.correct = 0;
+    delete scores[o.name]; result.textContent = "";
+    root.querySelectorAll(".chopt").forEach(function(x){ x.disabled = false; x.classList.remove("ok","err"); });
+  }
+  document.getElementById(o.resetId).addEventListener("click", reset);
+  resetFns.push(reset);
+}
+
+/* ---------- build exercises ---------- */
+setupPlacer({
+  name:"Exercise 1a", root:document.getElementById("s1"), resultId:"res1", resetId:"reset1",
+  items:[{id:"Are",label:"Are"},{id:"'d",label:"’d"},{id:"It",label:"It"},{id:"Let's",label:"Let’s"},{id:"like",label:"like"},{id:"see",label:"see"},{id:"sugar",label:"sugar"},{id:"time",label:"time"},{id:"What",label:"What"},{id:"Would",label:"Would"}],
+  usedExample:["Would"],
+  answers:{g2:"time",g3:"It",g4:"like",g5:"Let's",g6:"see",g7:"Are",g8:"'d",g9:"What",g10:"sugar"}
+});
+
+setupPlacer({
+  name:"Exercise 1b", root:document.getElementById("s2"), resultId:"res2", resetId:"reset2",
+  items:[
+    {id:"a",label:"No problem. How about dinner?",html:'<span class="optletter">a</span>No problem. <span class="sup" role="button" tabindex="0" data-vocab="how_about">How about</span> dinner?'},
+    {id:"b",label:"My daughter goes to swimming lessons at 2.00.",html:'<span class="optletter">b</span>My daughter goes to swimming lessons at 2.00.'},
+    {id:"c",label:"Would you like to come to my house for lunch on Saturday?",html:'<span class="optletter">c</span>Would you like to come to my house for lunch on Saturday?'},
+    {id:"d",label:"Can you come at about 8.00?",html:'<span class="optletter">d</span>Can you come at about 8.00?'},
+    {id:"e",label:"Yes, I’d love to come to dinner.",html:'<span class="optletter">e</span>Yes, I’d love to come to dinner.'},
+    {id:"f",label:"See you at 8.00 on Saturday.",html:'<span class="optletter">f</span>See you at 8.00 on Saturday.'},
+    {id:"g",label:"Sorry! I’d love to, but Saturday lunchtime isn’t a good time for me.",html:'<span class="optletter">g</span>Sorry! I’d love to, but Saturday lunchtime isn’t a good time for me.'}
+  ],
+  usedExample:["c"],
+  answers:{m2:"g",m3:"b",m4:"a",m5:"d",m6:"e",m7:"f"}
+});
+
+setupInputs({
+  name:"Exercise 2a", root:document.getElementById("s3"), resultId:"res3", resetId:"reset3",
+  variants:{
+    i2a:["like"], i2b:["come"], i2c:["dinner","lunch","tea"],
+    i3a:["like"], i3b:["something","anything"], i3c:["drink","eat"],
+    i4a:["like"], i4b:["come","go"], i4c:["cinema","theatre","theater","party","match","concert"],
+    i5a:["like"], i5b:["tennis","football","golf","chess","cards","basketball","volleyball"],
+    i6a:["like"], i6b:["tea","coffee","juice","water","a coffee"], i6c:["coffee","tea","burger","pizza","sandwich"]
+  },
+  display:{i2a:"like",i2b:"come",i2c:"dinner",i3a:"like",i3b:"something",i3c:"drink",i4a:"like",i4b:"come",i4c:"cinema",i5a:"like",i5b:"tennis",i6a:"like",i6b:"tea",i6c:"coffee"}
+});
+
+setupPlacer({
+  name:"Exercise 3", root:document.getElementById("s4"), resultId:"res4", resetId:"reset4",
+  items:[
+    {id:"p1",label:"how about a coffee"},
+    {id:"p2",label:"I’d like to ask you something"},
+    {id:"p3",label:"Let’s meet at half past six"},
+    {id:"p4",label:"Yeah, I’d love to"},
+    {id:"p5",label:"Would you like a burger"}
+  ],
+  usedExample:["p2"],
+  answers:{q2:"p4",q3:"p5",q4:"p3",q5:"p1"}
+});
+
+setupChoices({ name:"Exercise 4a", root:document.getElementById("choiceRoot"), resultId:"res5", resetId:"reset5" });
+
+/* writing */
+var replyBox = document.getElementById("replyBox");
+var wc = document.getElementById("wc");
+replyBox.addEventListener("input", function(){
+  var t = replyBox.value.trim();
+  wc.textContent = t ? t.split(/\s+/).length : 0;
+});
+document.getElementById("reset6").addEventListener("click", function(){
+  replyBox.value = ""; wc.textContent = "0";
+});
+resetFns.push(function(){ replyBox.value = ""; wc.textContent = "0"; });
+
+/* ---------- navigation ---------- */
+var screens = Array.prototype.slice.call(document.querySelectorAll(".screen"));
+var dotsBox = document.getElementById("dots");
+var backBtn = document.getElementById("backBtn");
+var nextBtn = document.getElementById("nextBtn");
+var progText = document.getElementById("progText");
+var idx = 0;
+screens.forEach(function(){ var d = document.createElement("span"); d.className = "dot"; dotsBox.appendChild(d); });
+var dots = Array.prototype.slice.call(dotsBox.children);
+function populateDone(){
+  var ul = document.getElementById("scoreList"); ul.innerHTML = "";
+  var entries = Object.keys(scores);
+  if(entries.length === 0){
+    var li0 = document.createElement("li"); li0.textContent = "No finished exercises yet — that’s OK, you can start again."; ul.appendChild(li0);
+  }
+  entries.forEach(function(k){ var li = document.createElement("li"); li.textContent = k + ": " + scores[k] + " correct."; ul.appendChild(li); });
+  if(replyBox.value.trim()){ var liw = document.createElement("li"); liw.textContent = "Exercise 4b: reply written (" + wc.textContent + " words)."; ul.appendChild(liw); }
+}
+function show(i){
+  idx = i;
+  screens.forEach(function(s, n){ s.classList.toggle("active", n === i); });
+  dots.forEach(function(d, n){ d.classList.toggle("on", n < i); d.classList.toggle("cur", n === i); });
+  progText.textContent = "Screen " + (i + 1) + " of " + screens.length;
+  backBtn.disabled = (i === 0);
+  if(i === screens.length - 1){ nextBtn.hidden = true; populateDone(); }
+  else { nextBtn.hidden = false; nextBtn.textContent = (i === screens.length - 2) ? "Finish →" : "Next →"; }
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+backBtn.addEventListener("click", function(){ if(idx > 0) show(idx - 1); });
+nextBtn.addEventListener("click", function(){ if(idx < screens.length - 1) show(idx + 1); });
+document.getElementById("startAgain").addEventListener("click", function(){
+  resetFns.forEach(function(fn){ fn(); });
+  show(0);
+});
+show(0);
+</script>
+
+<!--
+IMAGE PROMPTS USED (image generation service was unavailable at build time, so inline SVG
+placeholders with short descriptions were embedded instead, per SPEC fallback rule.
+Use these prompts to regenerate the pictures later in the coursebook style):
+
+1. Friendly flat cartoon illustration for English learners, clean shapes, bright but soft colours, expressive characters, no text, no letters, no watermark. A basketball match in progress: two teams in different coloured shirts playing on an indoor court, a referee with a whistle, happy spectators in the background.
+2. Friendly flat cartoon illustration for English learners, clean shapes, bright but soft colours, expressive characters, no text, no letters, no watermark. A modern sports centre building seen from outside with big windows showing a swimming pool and a gym inside, a basketball hoop near the doors, people walking in.
+3. Friendly flat cartoon illustration for English learners, clean shapes, bright but soft colours, expressive characters, no text, no letters, no watermark. A hungry child at a table holding a completely empty plate, a thought bubble with a steaming bowl of soup, hand on tummy, hopeful exaggerated expression.
+4. Friendly flat cartoon illustration for English learners, clean shapes, bright but soft colours, expressive characters, no text, no letters, no watermark. The entrance of a cinema: double doors with a red carpet, two friends waiting and waving near the doors, blank poster frames on the walls.
+5. Friendly flat cartoon illustration for English learners, clean shapes, bright but soft colours, expressive characters, no text, no letters, no watermark. One friend giving a small invitation card to another friend, the second friend answering with a big joyful smile and thumbs up, sparkles around them.
+6. Friendly flat cartoon illustration for English learners, clean shapes, bright but soft colours, expressive characters, no text, no letters, no watermark. Two friends at a cafe table, one friend gesturing towards a cup of coffee as a suggestion, the other looking pleased, a thought bubble showing a coffee pot.
+7. Friendly flat cartoon illustration for English learners, clean shapes, bright but soft colours, expressive characters, no text, no letters, no watermark. A hand offering an open envelope with a party invitation card sliding out, confetti and stars around, a small cake picture on the card.
+8. Friendly flat cartoon illustration for English learners, clean shapes, bright but soft colours, expressive characters, no text, no letters, no watermark. A child writing a friendly email on a laptop at a desk, a paper envelope with a heart beside the laptop, warm cosy room.
+-->
+</body>
+</html>

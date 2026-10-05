@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practical English 5 — Would you like to come? | Inviting and offering (v1.5)</title>
+<!--
+════════════════════════════════════════════════════════════════════════
+VERSION 1.5 CHANGE SUMMARY
+· LAST SCREEN (Screen 13 — Homework): added a large, flashing “HOMEWORK”
+  call-to-action button linking to homework.html (same folder level as this
+  page). Placed twice: at the TOP of the screen (first thing the student
+  sees) and at the BOTTOM after the task list, so it cannot be missed.
+· The flash animation is a soft pulse (scale + glow ring); it is fully
+  disabled for users with prefers-reduced-motion (accessibility).
+· Teacher panel: change log + live-class note about the homework button.
+· No changes to sequence, timing (≈90 min), exercises or media.
+· PRIOR: v1.4 coursebook pronunciation/video/speaking screens; v1.3 event
+  images; v1.2 media paths; v1.1 coursebook video exercises; v1.0 build.
+════════════════════════════════════════════════════════════════════════
+-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/700.css">
+<style>
+:root{
+  --bg:#F4EEE3; --card:#FFFFFF; --ink:#22333B; --muted:#5E6E76;
+  --teal:#1F6F6B; --teal-d:#164F4C; --teal-l:#E3F0EF;
+  --coral:#EE6C4D; --coral-l:#FDEAE4; --mustard:#F2A93B; --cream:#FBF3E4;
+  --ok:#2E7D32; --ok-bg:#E4F3E5; --err:#C62828; --err-bg:#FBE9E9;
+  --line:#E2D9C8; --radius:16px; --shadow:0 6px 22px rgba(34,51,59,.09);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;font-size:17px}
+button{font-family:inherit}
+h1,h2,h3{line-height:1.25;margin:0}
+.hidden{display:none!important}
+
+.wrap{max-width:960px;margin:0 auto;padding:16px 18px 120px}
+header.top{position:sticky;top:0;z-index:40;background:rgba(244,238,227,.96);backdrop-filter:blur(4px);border-bottom:1px solid var(--line)}
+.top-in{max-width:960px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:12px}
+.lesson-tag{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
+.lesson-name{font-weight:700;font-size:15px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-teacher{background:var(--teal-l);color:var(--teal-d);border:1px solid #cfe3e1;border-radius:999px;padding:6px 14px;font-size:13.5px;font-weight:600;cursor:pointer}
+.btn-teacher:hover{background:#d5e8e6}
+.progress{height:6px;background:#E7DFCF}
+.progress .bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--mustard));width:8%;transition:width .35s ease}
+
+.screen{display:none;animation:fade .35s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.stage{display:inline-block;background:var(--teal);color:#fff;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:5px 13px;border-radius:999px;margin:22px 0 8px}
+.timechip{display:inline-block;margin-left:8px;background:var(--cream);border:1px solid var(--line);color:var(--muted);font-size:12.5px;font-weight:600;padding:4px 11px;border-radius:999px;vertical-align:2px}
+.screen h2{font-size:clamp(24px,4vw,32px);margin-bottom:6px}
+.lead{color:var(--muted);max-width:64ch;margin:2px 0 20px}
+
+/* ── flashing HOMEWORK call-to-action (v1.5) ── */
+.hw-cta{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  max-width:600px;margin:20px auto;padding:18px 26px;
+  background:var(--coral);color:#fff;text-decoration:none;
+  border:3px solid #fff;border-radius:18px;
+  font-size:21px;font-weight:800;letter-spacing:.02em;text-align:center;
+  box-shadow:0 8px 26px rgba(238,108,77,.45);
+  animation:hwflash 1.4s ease-in-out infinite;
+}
+.hw-cta:hover{filter:brightness(1.08)}
+.hw-cta:focus-visible{outline:4px solid var(--mustard);outline-offset:3px}
+.hw-cta .hw-ico{font-size:30px;line-height:1}
+.hw-cta .hw-txt{display:flex;flex-direction:column;line-height:1.25}
+.hw-cta .hw-txt small{font-size:12.5px;font-weight:600;opacity:.92;letter-spacing:.03em}
+@keyframes hwflash{
+  0%,100%{transform:scale(1);box-shadow:0 8px 26px rgba(238,108,77,.45),0 0 0 0 rgba(238,108,77,.65);background:var(--coral)}
+  50%{transform:scale(1.035);box-shadow:0 10px 30px rgba(238,108,77,.55),0 0 0 16px rgba(238,108,77,0);background:#E4523C}
+}
+@media (prefers-reduced-motion: reduce){.hw-cta{animation:none}}
+
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin:16px 0}
+.instr{font-weight:600;color:var(--teal-d);margin:0 0 12px}
+.instr .num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-size:13px;margin-right:8px;vertical-align:-4px}
+.overview{background:linear-gradient(135deg,var(--teal-l),#F6EFE0);border:1px solid #D8E5E3;border-radius:var(--radius);padding:18px 20px;margin:16px 0;font-size:18px}
+.overview b{color:var(--teal-d)}
+.useful{background:var(--cream);border:1px dashed var(--mustard);border-radius:12px;padding:14px 16px;margin:16px 0}
+.useful h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:#9A6B12}
+.useful li{margin:4px 0}
+.bridge{background:var(--coral-l);border-left:5px solid var(--coral);border-radius:10px;padding:14px 16px;margin:20px 0;font-size:17.5px}
+.note{font-size:13.5px;color:var(--muted);background:#F1ECE0;border-radius:10px;padding:10px 13px;margin:12px 0}
+
+figure.shot{margin:0}
+figure.shot svg,figure.shot img{width:100%;height:auto;display:block;border-radius:var(--radius)}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
+.hero-frame{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin:10px 0 4px}
+
+.media-slot>img{width:100%;height:auto;display:block}
+.media-slot .fallback{display:none;width:100%;height:auto}
+.media-slot.img-off>img{display:none}
+.media-slot.img-off .fallback{display:block}
+.hero-frame.media-slot .fallback{border-radius:0}
+
+.w{color:var(--teal-d);border-bottom:2px dotted var(--teal);cursor:pointer;font-weight:600;background:none;border-top:0;border-left:0;border-right:0;padding:0 1px;border-radius:2px;font-size:inherit}
+.w:hover{background:var(--teal-l)}
+.w:focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
+.hl{background:#FFF3A6;border-radius:4px;padding:0 4px;box-shadow:0 0 0 2px #FFF3A6}
+
+.refcards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+@media(max-width:620px){.refcards{grid-template-columns:1fr}}
+.refcard{border:2px solid var(--line);background:var(--card);border-radius:var(--radius);padding:22px;cursor:pointer;text-align:left;transition:.2s;box-shadow:var(--shadow)}
+.refcard:hover{border-color:var(--teal);transform:translateY(-2px)}
+.refcard .rc-ico{font-size:26px;display:block;margin-bottom:8px}
+.refcard .rc-t{font-size:19px;font-weight:700;display:block}
+.refcard .rc-s{font-size:14px;color:var(--muted);display:block;margin-top:4px}
+.refcard.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.refcard.on .rc-s{color:#D7E8E6}
+.refpanel{display:none;background:var(--card);border:2px solid var(--teal);border-radius:var(--radius);padding:20px 22px;margin:4px 0 18px;animation:fade .25s ease}
+.refpanel.open{display:block}
+
+.vocab-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+@media(max-width:640px){.vocab-list{grid-template-columns:1fr}}
+.vchip{background:var(--teal-l);border:1px solid #cfe1df;border-radius:10px;padding:10px 13px;font-weight:600;color:var(--teal-d);cursor:pointer;text-align:left;font-size:15.5px;transition:.15s}
+.vchip:hover{background:#d6e9e7;transform:translateY(-1px)}
+.vchip:focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
+.vchip .pos{font-weight:400;color:var(--muted);font-size:13px}
+.linkbtn{background:none;border:none;color:var(--teal-d);font-weight:700;cursor:pointer;text-decoration:underline;font-size:15px;padding:6px 2px}
+.linkbtn:hover{color:var(--coral)}
+
+.gform{background:var(--cream);border-radius:12px;padding:14px 16px;margin:12px 0;border:1px solid var(--line)}
+.gform .formula{font-size:18px;font-weight:700;color:var(--teal-d)}
+.gform .formula em{color:var(--coral);font-style:normal;background:var(--coral-l);border-radius:6px;padding:1px 7px}
+.gform .exs{margin:8px 0 0;padding-left:18px}
+table.gtab{width:100%;border-collapse:collapse;margin:12px 0;font-size:15.5px}
+table.gtab th{background:var(--teal);color:#fff;text-align:left;padding:9px 12px;font-size:14px}
+table.gtab td{border:1px solid var(--line);padding:9px 12px;vertical-align:top}
+table.gtab tr:nth-child(even) td{background:#FAF6EC}
+.hi{background:#FFF3D6;border-radius:5px;padding:0 4px;font-weight:700;color:#8A5B00}
+
+.ex{position:relative}
+.exbar{display:flex;align-items:center;gap:14px;margin:14px 0 6px;flex-wrap:wrap}
+.btn-reset{background:#fff;border:2px solid var(--line);border-radius:999px;padding:7px 16px;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer}
+.btn-reset:hover{border-color:var(--coral);color:var(--coral)}
+.result{font-weight:700;color:var(--teal-d);background:var(--teal-l);border:1px solid #cfe1df;border-radius:999px;padding:7px 16px;font-size:15px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+.qtext{margin:0 0 10px;font-size:16.5px}
+.qtext .qn{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--mustard);color:#4A3405;align-items:center;justify-content:center;font-weight:700;font-size:13.5px;margin-right:8px;vertical-align:-5px}
+.opts{display:flex;flex-wrap:wrap;gap:9px}
+.opt{background:#F7F2E7;border:2px solid var(--line);border-radius:10px;padding:9px 15px;font-size:15.5px;cursor:pointer;transition:.15s;color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--teal);background:var(--teal-l)}
+.opt:focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
+.opt.correct{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);font-weight:700}
+.opt.wrong{background:var(--err-bg);border-color:var(--err);color:var(--err);animation:shake .45s}
+.opt:disabled{cursor:default;opacity:.92}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+.tray{display:flex;flex-wrap:wrap;gap:9px;background:var(--cream);border:2px dashed var(--line);border-radius:12px;padding:12px;margin:12px 0;min-height:56px}
+.sitem{background:#fff;border:2px solid var(--teal);color:var(--teal-d);border-radius:10px;padding:8px 15px;font-weight:600;font-size:15.5px;cursor:grab;user-select:none;touch-action:manipulation;transition:.15s}
+.sitem:hover{background:var(--teal-l)}
+.sitem.sel{background:var(--teal);color:#fff;box-shadow:0 0 0 4px rgba(31,111,107,.25)}
+.sitem.locked{cursor:default;opacity:.95}
+.sitem.locked.placed{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+.sitem.locked.revealed{border-color:var(--ok);background:var(--ok-bg);color:var(--ok);border-style:dashed}
+.sitem.wrong{animation:shake .45s;border-color:var(--err);background:var(--err-bg);color:var(--err)}
+.sitem:focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
+.zones{display:grid;gap:12px;margin:14px 0}
+.zones.cols2{grid-template-columns:1fr 1fr}
+.zones.cols3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:700px){.zones.cols2,.zones.cols3{grid-template-columns:1fr}}
+.zone{background:#fff;border:2px dashed #B9C6CB;border-radius:12px;padding:12px;min-height:70px;transition:.15s}
+.zone.zactive{border-color:var(--mustard);background:#FFF9EC}
+.zone.drop-hot{border-color:var(--teal);background:var(--teal-l)}
+.zone-title{font-weight:700;color:var(--teal-d);margin-bottom:8px;font-size:15px}
+.zone-items{display:flex;flex-wrap:wrap;gap:8px;min-height:24px}
+.piczone{display:flex;flex-direction:column;gap:8px;background:#fff;border:2px dashed #B9C6CB;border-radius:12px;padding:10px;transition:.15s}
+.piczone.zactive{border-color:var(--mustard);background:#FFF9EC}
+.piczone.drop-hot{border-color:var(--teal);background:var(--teal-l)}
+.piczone img,.piczone svg{width:100%;height:auto;border-radius:8px}
+.grid6{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+@media(max-width:720px){.grid6{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.grid6{grid-template-columns:1fr}}
+
+.dlg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+.dlg .line{margin:9px 0;display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+.dlg .spk{font-weight:700;color:var(--teal-d);min-width:62px}
+.dlg .line.speaking{background:#FFF6DE;border-radius:8px}
+.gap{display:inline-block;min-width:110px;min-height:34px;border:2px dashed var(--teal);border-radius:9px;vertical-align:middle;padding:2px 6px;margin:0 3px;text-align:center;transition:.15s}
+.gap.zactive{border-color:var(--mustard);background:#FFF9EC}
+.gap .sitem{font-size:14.5px;padding:4px 10px}
+
+.btn-audio{background:var(--teal-l);border:1.5px solid #bcd8d5;border-radius:999px;color:var(--teal-d);cursor:pointer;padding:6px 14px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:7px}
+.btn-audio:hover{background:#d3e7e5}
+.btn-audio:disabled{opacity:.5;cursor:wait}
+.btn-play{background:var(--coral);border:none;color:#fff;border-radius:999px;padding:12px 26px;font-size:16px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:9px;box-shadow:0 4px 14px rgba(238,108,77,.35)}
+.btn-play:hover{filter:brightness(1.06)}
+.btn-play:disabled{opacity:.6;cursor:wait}
+.btn-stop{background:#fff;border:2px solid var(--line);color:var(--muted);border-radius:999px;padding:10px 20px;font-weight:600;cursor:pointer;font-size:15px}
+
+video.lesson-video{width:100%;border-radius:var(--radius);background:#101820;box-shadow:var(--shadow);display:block;aspect-ratio:16/9}
+.video-wrap{margin:14px 0}
+
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+@media(max-width:760px){.photos{grid-template-columns:1fr}}
+.photocard{padding:10px;margin:0}
+.photocard img,.photocard svg{width:100%;height:auto;border-radius:10px;display:block}
+.phlabel{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--mustard);color:#4A3405;font-weight:800;margin:8px 0 6px}
+.photocard .opts{justify-content:center}
+
+.picks{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}
+@media(max-width:760px){.picks{grid-template-columns:repeat(2,1fr)}}
+.pick{background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;text-align:center;transition:.15s;font-weight:600;font-size:14px;color:var(--ink)}
+.pick img,.pick svg{width:100%;height:auto;border-radius:8px;margin-bottom:6px;display:block}
+.pick:hover{border-color:var(--teal)}
+.pick.chosen{border-color:var(--coral);background:var(--coral-l);box-shadow:0 0 0 3px rgba(238,108,77,.2)}
+
+.evt-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:12px 0 8px}
+@media(max-width:700px){.evt-row{grid-template-columns:repeat(3,1fr)}}
+.evt{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;font-size:13.5px;font-weight:600}
+.evt img,.evt svg{width:100%;height:auto;border-radius:8px;margin-bottom:6px;display:block}
+
+.rhythm{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:12px 0}
+.rhythm .line{margin:7px 0;font-size:18px;padding-left:0}
+.rhythm .line.l2{padding-left:34px}
+.rhythm .line.l3{padding-left:68px}
+.rhythm .arrow{color:var(--muted);margin-right:6px}
+.collages{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+@media(max-width:700px){.collages{grid-template-columns:1fr}}
+.collage{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px}
+.collage .prompt{display:inline-block;background:var(--teal-l);color:var(--teal-d);font-weight:700;border-radius:8px;padding:6px 12px;margin-bottom:10px;font-style:italic}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+
+.qlist{list-style:none;padding:0;margin:12px 0;counter-reset:qq}
+.qlist li{counter-increment:qq;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 16px 13px 52px;margin:9px 0;position:relative;font-size:16.5px}
+.qlist li::before{content:counter(qq);position:absolute;left:15px;top:13px;width:25px;height:25px;border-radius:50%;background:var(--mustard);color:#4A3405;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+
+.func-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+@media(max-width:700px){.func-grid{grid-template-columns:1fr}}
+.func{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+.func h4{margin:0 0 8px;color:var(--teal-d)}
+.func .big{font-size:19px;font-weight:700;color:var(--ink);background:var(--teal-l);border-radius:10px;padding:10px 13px;margin:6px 0}
+.func .big em{color:var(--coral);font-style:normal}
+.row-audio{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0}
+
+.role{background:linear-gradient(135deg,var(--coral-l),#FFF6E9);border:1px solid #F3D3C7;border-radius:14px;padding:16px 18px;margin:14px 0}
+.checklist{list-style:none;padding:0;margin:10px 0}
+.checklist li{padding:5px 0 5px 30px;position:relative}
+.checklist li::before{content:"✓";position:absolute;left:4px;color:var(--teal);font-weight:800}
+
+nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.97);border-top:1px solid var(--line);box-shadow:0 -4px 18px rgba(34,51,59,.08)}
+.nav-in{max-width:960px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:14px}
+.btn-nav{border:none;border-radius:999px;padding:12px 26px;font-size:16px;font-weight:700;cursor:pointer;transition:.15s}
+.btn-nav:focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
+.btn-back{background:#fff;border:2px solid var(--line);color:var(--muted)}
+.btn-back:hover:not(:disabled){border-color:var(--teal);color:var(--teal-d)}
+.btn-next{background:var(--teal);color:#fff;box-shadow:0 4px 14px rgba(31,111,107,.3)}
+.btn-next:hover:not(:disabled){background:var(--teal-d)}
+.btn-nav:disabled{opacity:.4;cursor:default}
+.counter{flex:1;text-align:center;color:var(--muted);font-size:14px;font-weight:600}
+
+.overlay{position:fixed;inset:0;background:rgba(20,32,38,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:18px;animation:fade .2s}
+.sheet{background:#fff;border-radius:18px;max-width:440px;width:100%;max-height:88vh;overflow:auto;padding:22px;position:relative;box-shadow:0 18px 50px rgba(0,0,0,.3)}
+.sheet .close{position:absolute;top:12px;right:12px;background:var(--bg);border:none;border-radius:50%;width:36px;height:36px;font-size:17px;cursor:pointer;color:var(--muted)}
+.sheet .close:hover{background:var(--err-bg);color:var(--err)}
+.sheet .head{font-size:24px;font-weight:700;color:var(--teal-d);padding-right:36px}
+.sheet .ipa{font-size:17px;color:var(--muted);margin:3px 0 8px;font-family:Georgia,serif}
+.sheet .pos{display:inline-block;background:var(--mustard);color:#4A3405;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;margin-bottom:8px}
+.sheet .def{background:var(--cream);border-radius:10px;padding:11px 13px;margin:10px 0;font-size:15.5px}
+.sheet .exq{margin:8px 0;font-size:15.5px;padding-left:14px;border-left:3px solid var(--teal-l)}
+.sheet svg.thumb{width:120px;height:90px;border-radius:10px;margin:8px 0}
+.btn-trans{background:var(--coral-l);border:1.5px solid #F0C4B6;color:#A33C22;border-radius:999px;padding:8px 18px;font-weight:700;font-size:14.5px;cursor:pointer;margin-top:8px}
+.btn-trans:hover{background:#FADDD3}
+.trans{margin-top:10px;background:#FDEFEA;border-radius:10px;padding:10px 13px;font-size:16px;font-weight:600;color:#8C341C}
+
+.teacher-sheet{max-width:760px}
+.teacher-sheet h3{color:var(--teal-d);margin:18px 0 6px;font-size:17px}
+.teacher-sheet table{width:100%;border-collapse:collapse;font-size:14.5px;margin:8px 0}
+.teacher-sheet th,.teacher-sheet td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+.teacher-sheet th{background:var(--teal-l)}
+.teacher-sheet ul{margin:6px 0;padding-left:20px}
+.teacher-sheet li{margin:4px 0}
+
+.hw-task{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+.hw-task h3{color:var(--teal-d);font-size:18px;margin-bottom:8px}
+.hw-num{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:var(--coral);color:#fff;font-weight:800;margin-right:9px;font-size:15px}
+.answers{background:var(--ok-bg);border:1px dashed var(--ok);border-radius:10px;padding:12px 15px;margin-top:10px}
+
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+:focus-visible{outline:3px solid var(--mustard);outline-offset:2px;border-radius:4px}
+.finish{background:var(--teal-l);border:1px solid #cfe1df;border-radius:var(--radius);padding:18px 20px;margin:18px 0;color:var(--teal-d);font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ SVG SPRITE (fallback placeholders) ═══════════ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="ic-hero" viewBox="0 0 640 360">
+  <rect width="640" height="360" rx="16" fill="#FBF3E4"/>
+  <path d="M20 44 Q170 96 320 58 Q470 22 622 74" stroke="#C9B79C" stroke-width="3" fill="none"/>
+  <g><circle cx="70" cy="58" r="8" fill="#EE6C4D"/><circle cx="140" cy="72" r="8" fill="#F2A93B"/><circle cx="210" cy="76" r="8" fill="#3E8E8A"/><circle cx="280" cy="68" r="8" fill="#EE6C4D"/><circle cx="350" cy="55" r="8" fill="#F2A93B"/><circle cx="420" cy="44" r="8" fill="#3E8E8A"/><circle cx="490" cy="40" r="8" fill="#EE6C4D"/><circle cx="560" cy="52" r="8" fill="#F2A93B"/></g>
+  <rect x="468" y="252" width="152" height="13" rx="6" fill="#C98A5B"/><rect x="484" y="265" width="11" height="72" rx="5" fill="#A9713F"/><rect x="592" y="265" width="11" height="72" rx="5" fill="#A9713F"/>
+  <rect x="492" y="224" width="26" height="28" rx="5" fill="#fff" stroke="#3E8E8A" stroke-width="3"/><path d="M518 231 h9 a7 7 0 0 1 0 14 h-9" stroke="#3E8E8A" stroke-width="3" fill="none"/>
+  <rect x="546" y="224" width="26" height="28" rx="5" fill="#fff" stroke="#EE6C4D" stroke-width="3"/><path d="M572 231 h9 a7 7 0 0 1 0 14 h-9" stroke="#EE6C4D" stroke-width="3" fill="none"/>
+  <circle cx="196" cy="150" r="34" fill="#E8B98A"/><path d="M160 146 Q166 106 196 106 Q226 106 232 146 L222 138 Q196 124 170 138 Z" fill="#5A4632"/>
+  <path d="M142 352 L142 244 Q142 196 196 196 Q250 196 250 244 L250 352 Z" fill="#3E8E8A"/>
+  <path d="M240 232 Q296 216 318 234" stroke="#3E8E8A" stroke-width="21" stroke-linecap="round" fill="none"/><circle cx="322" cy="236" r="11" fill="#E8B98A"/>
+  <g transform="rotate(-8 366 232)"><rect x="332" y="206" width="72" height="48" rx="7" fill="#fff" stroke="#EE6C4D" stroke-width="4"/><path d="M344 222 h48 M344 236 h30" stroke="#C9B79C" stroke-width="5" stroke-linecap="round"/></g>
+  <circle cx="440" cy="160" r="32" fill="#D9A06B"/><path d="M406 158 Q408 120 440 120 Q472 120 474 158 L466 150 Q440 136 414 150 Z" fill="#2E2A26"/><circle cx="440" cy="122" r="13" fill="#2E2A26"/>
+  <path d="M392 352 L392 258 Q392 212 440 212 Q488 212 488 258 L488 352 Z" fill="#EE6C4D"/>
+  <path d="M398 246 Q372 240 356 246" stroke="#EE6C4D" stroke-width="19" stroke-linecap="round" fill="none"/><circle cx="352" cy="248" r="10" fill="#D9A06B"/>
+  <rect x="46" y="292" width="40" height="46" rx="8" fill="#EE6C4D"/><path d="M52 292 Q56 250 66 244 Q72 258 68 292 Q78 254 88 250 Q86 274 80 292 Z" fill="#3E8E8A"/>
+</symbol>
+<symbol id="ic-photoA" viewBox="0 0 240 180">
+  <rect width="240" height="180" rx="14" fill="#B9BEC4"/>
+  <g fill="#A6ABB2"><rect x="8" y="10" width="46" height="30" rx="3" fill="#C6CBD1"/><rect x="62" y="10" width="46" height="30" rx="3" fill="#C6CBD1"/><rect x="116" y="10" width="46" height="30" rx="3" fill="#C6CBD1"/><rect x="170" y="10" width="46" height="30" rx="3" fill="#C6CBD1"/><rect x="8" y="48" width="46" height="30" rx="3" fill="#C6CBD1"/><rect x="62" y="48" width="46" height="30" rx="3" fill="#C6CBD1"/><rect x="116" y="48" width="46" height="30" rx="3" fill="#C6CBD1"/><rect x="170" y="48" width="46" height="30" rx="3" fill="#C6CBD1"/></g>
+  <rect x="196" y="60" width="36" height="120" rx="4" fill="#2E7F8F"/>
+  <g><circle cx="118" cy="52" r="15" fill="#E8B98A"/><path d="M104 50 Q106 34 118 34 Q130 34 132 50 L128 44 Q118 38 108 44 Z" fill="#3E6E9E"/><path d="M100 130 L102 74 Q118 62 134 74 L136 130 Z" fill="#B03A3A"/></g>
+  <g><circle cx="66" cy="66" r="18" fill="#E8B98A"/><path d="M48 62 Q50 42 66 42 Q82 42 84 62 L78 54 Q66 46 54 54 Z" fill="#4A3423"/><path d="M40 180 L42 96 Q66 80 90 96 L92 180 Z" fill="#23272B"/><circle cx="66" cy="120" r="14" fill="#39424E"/></g>
+  <g><circle cx="160" cy="64" r="18" fill="#F3C9A0"/><path d="M142 60 Q144 40 160 40 Q176 40 178 60 L172 52 Q160 44 148 52 Z" fill="#6B4A2F"/><rect x="148" y="58" width="24" height="7" rx="3" fill="#22303C"/><path d="M134 180 L136 94 Q160 78 184 94 L186 180 Z" fill="#F4F1EA"/><rect x="146" y="112" width="30" height="22" rx="3" fill="#3E6E9E"/></g>
+</symbol>
+<symbol id="ic-photoB" viewBox="0 0 240 180">
+  <rect width="240" height="180" rx="14" fill="#EDF1F2"/>
+  <rect x="150" y="14" width="34" height="40" rx="3" fill="#DDE5E6"/><rect x="196" y="14" width="34" height="40" rx="3" fill="#DDE5E6"/>
+  <rect x="0" y="96" width="240" height="10" fill="#CFD8DA"/>
+  <g><rect x="30" y="70" width="34" height="24" rx="3" fill="#22303C"/><rect x="44" y="94" width="6" height="6" fill="#22303C"/></g>
+  <g><rect x="150" y="70" width="34" height="24" rx="3" fill="#22303C"/><rect x="164" y="94" width="6" height="6" fill="#22303C"/></g>
+  <g><circle cx="62" cy="118" r="14" fill="#F3C9A0"/><path d="M48 116 Q50 100 62 100 Q74 100 76 116 L71 109 Q62 103 53 109 Z" fill="#6B4A2F"/><rect x="52" y="114" width="20" height="6" rx="3" fill="#22303C"/><path d="M42 180 L44 138 Q62 126 80 138 L82 180 Z" fill="#9FB6C9"/></g>
+  <g><circle cx="182" cy="120" r="14" fill="#E8B98A"/><path d="M168 118 Q170 102 182 102 Q194 102 196 118 L191 111 Q182 105 173 111 Z" fill="#4A3423"/><path d="M162 180 L164 140 Q182 128 200 140 L202 180 Z" fill="#5B8FB9"/></g>
+</symbol>
+<symbol id="ic-photoC" viewBox="0 0 240 180">
+  <rect width="240" height="180" rx="14" fill="#C9CDD2"/>
+  <rect x="10" y="6" width="220" height="10" rx="5" fill="#E8ECEE"/><rect x="10" y="24" width="220" height="10" rx="5" fill="#E8ECEE"/>
+  <rect x="36" y="40" width="34" height="26" rx="4" fill="#F2A93B"/>
+  <rect x="0" y="140" width="240" height="16" rx="6" fill="#F2A93B"/><rect x="0" y="156" width="240" height="24" fill="#E0E4E8"/>
+  <rect x="44" y="118" width="12" height="24" rx="4" fill="#B03A3A"/>
+  <g><circle cx="112" cy="86" r="16" fill="#E8B98A"/><path d="M96 82 Q98 64 112 64 Q126 64 128 82 L122 74 Q112 68 102 74 Z" fill="#4A3423"/><path d="M88 180 L90 108 Q112 94 134 108 L136 180 Z" fill="#23272B"/><circle cx="112" cy="128" r="12" fill="#39424E"/></g>
+  <g><circle cx="196" cy="92" r="15" fill="#F3C9A0"/><path d="M181 88 Q183 70 196 70 Q209 70 211 88 L206 80 Q196 74 186 80 Z" fill="#6B4A2F"/><rect x="185" y="86" width="22" height="6" rx="3" fill="#22303C"/><path d="M176 180 L178 112 Q196 100 214 112 L216 180 Z" fill="#F4F1EA"/><rect x="150" y="118" width="14" height="20" rx="3" fill="#fff"/></g>
+</symbol>
+<symbol id="ic-cinema" viewBox="0 0 240 180">
+  <rect width="240" height="180" rx="14" fill="#16414E"/>
+  <rect x="45" y="55" width="150" height="112" rx="10" fill="#FBF3E4"/>
+  <rect x="60" y="28" width="120" height="28" rx="8" fill="#EE6C4D"/>
+  <g fill="#F2A93B"><circle cx="72" cy="42" r="4"/><circle cx="96" cy="42" r="4"/><circle cx="120" cy="42" r="4"/><circle cx="144" cy="42" r="4"/><circle cx="168" cy="42" r="4"/></g>
+  <rect x="60" y="68" width="120" height="36" rx="6" fill="#22303C"/>
+  <rect x="78" y="118" width="36" height="49" rx="4" fill="#3E8E8A"/><rect x="126" y="118" width="36" height="49" rx="4" fill="#3E8E8A"/>
+  <path d="M14 172 L20 126 H58 L64 172 Z" fill="#fff"/><rect x="24" y="130" width="8" height="40" fill="#EE6C4D"/><rect x="42" y="130" width="8" height="40" fill="#EE6C4D"/>
+  <g fill="#FDF0D5"><circle cx="26" cy="122" r="8"/><circle cx="40" cy="116" r="9"/><circle cx="54" cy="122" r="8"/></g>
+</symbol>
+<symbol id="ic-concert" viewBox="0 0 240 180">
+  <rect width="240" height="180" rx="14" fill="#22303C"/>
+  <path d="M46 0 L14 118 L78 118 Z" fill="#F2A93B" opacity=".22"/><path d="M194 0 L162 118 L226 118 Z" fill="#EE6C4D" opacity=".22"/>
+  <rect x="0" y="116" width="240" height="16" fill="#3B4A5A"/>
+  <circle cx="120" cy="52" r="14" fill="#F3C9A0"/><path d="M104 74 Q120 62 136 74 L142 128 H98 Z" fill="#EE6C4D"/>
+  <g fill="#16414E"><circle cx="20" cy="160" r="14"/><circle cx="58" cy="164" r="13"/><circle cx="96" cy="160" r="14"/><circle cx="144" cy="164" r="13"/><circle cx="182" cy="160" r="14"/><circle cx="220" cy="164" r="13"/></g>
+</symbol>
+<symbol id="ic-party" viewBox="0 0 240 180">
+  <rect width="240" height="180" rx="14" fill="#FDF6EC"/>
+  <path d="M8 22 Q62 44 120 22 Q178 2 232 26" stroke="#C9B79C" stroke-width="2.5" fill="none"/>
+  <path d="M36 32 l10 20 l10 -17 Z" fill="#EE6C4D"/><path d="M86 36 l10 20 l10 -18 Z" fill="#3E8E8A"/><path d="M138 30 l10 20 l10 -18 Z" fill="#F2A93B"/><path d="M188 26 l10 20 l10 -18 Z" fill="#EE6C4D"/>
+  <rect x="28" y="142" width="184" height="12" rx="6" fill="#C98A5B"/>
+  <rect x="92" y="106" width="56" height="36" rx="7" fill="#fff" stroke="#E4D9C5" stroke-width="2"/>
+  <g><rect x="104" y="88" width="5" height="16" rx="2" fill="#3E8E8A"/><circle cx="106.5" cy="84" r="4" fill="#F2A93B"/><rect x="118" y="84" width="5" height="20" rx="2" fill="#EE6C4D"/><circle cx="120.5" cy="80" r="4" fill="#F2A93B"/><rect x="132" y="88" width="5" height="16" rx="2" fill="#3E8E8A"/><circle cx="134.5" cy="84" r="4" fill="#F2A93B"/></g>
+  <circle cx="192" cy="72" r="17" fill="#EE6C4D"/><circle cx="214" cy="98" r="13" fill="#3E8E8A"/>
+</symbol>
+<symbol id="ic-football" viewBox="0 0 240 180">
+  <rect width="240" height="180" rx="14" fill="#BFE3F0"/>
+  <rect x="0" y="42" width="240" height="30" fill="#8FA9B3"/>
+  <path d="M0 72 H240 V180 H0 Z" fill="#4E9A51"/>
+  <g fill="#3F8444"><rect x="0" y="72" width="40" height="108"/><rect x="80" y="72" width="40" height="108"/><rect x="160" y="72" width="40" height="108"/></g>
+  <ellipse cx="120" cy="128" rx="30" ry="14" fill="none" stroke="#fff" stroke-width="3" opacity=".85"/>
+  <circle cx="120" cy="146" r="10" fill="#fff"/><path d="M120 140 l5 4 -2 6 h-6 l-2 -6 Z" fill="#22303C"/>
+  <g><circle cx="88" cy="112" r="8" fill="#E8B98A"/><path d="M80 140 L81 122 Q88 116 95 122 L96 140 Z" fill="#3E8E8A"/></g>
+  <g><circle cx="152" cy="112" r="8" fill="#D9A06B"/><path d="M144 140 L145 122 Q152 116 159 122 L160 140 Z" fill="#EE6C4D"/></g>
+</symbol>
+<symbol id="ic-wedding" viewBox="0 0 240 180">
+  <rect width="240" height="180" rx="14" fill="#FBF3E4"/>
+  <rect x="0" y="150" width="240" height="30" fill="#CFE3C4"/>
+  <path d="M62 168 V96 Q120 36 178 96 V168" stroke="#A9713F" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <g><circle cx="72" cy="86" r="7" fill="#EE9A9A"/><circle cx="96" cy="62" r="8" fill="#F2A93B"/><circle cx="120" cy="52" r="8" fill="#EE9A9A"/><circle cx="146" cy="62" r="8" fill="#EE6C4D"/><circle cx="168" cy="86" r="7" fill="#F2A93B"/></g>
+  <g><circle cx="104" cy="98" r="11" fill="#E8B98A"/><path d="M93 108 Q104 84 115 108 L122 168 H86 Z" fill="#fff" stroke="#E4D9C5" stroke-width="2"/></g>
+  <g><circle cx="138" cy="96" r="11" fill="#D9A06B"/><path d="M127 110 Q138 100 149 110 L152 168 H124 Z" fill="#2E3F57"/></g>
+</symbol>
+<symbol id="ic-restaurant" viewBox="0 0 240 180">
+  <rect width="240" height="180" rx="14" fill="#F7E8D5"/>
+  <line x1="62" y1="0" x2="62" y2="26" stroke="#5E6E76" stroke-width="3"/><path d="M48 40 L62 24 L76 40 Z" fill="#F2A93B"/>
+  <line x1="178" y1="0" x2="178" y2="26" stroke="#5E6E76" stroke-width="3"/><path d="M164 40 L178 24 L192 40 Z" fill="#EE6C4D"/>
+  <g><circle cx="72" cy="86" r="13" fill="#E8B98A"/><path d="M56 132 L58 104 Q72 94 86 104 L88 132 Z" fill="#3E8E8A"/></g>
+  <g><circle cx="168" cy="86" r="13" fill="#D9A06B"/><path d="M152 132 L154 104 Q168 94 182 104 L184 132 Z" fill="#EE6C4D"/></g>
+  <rect x="38" y="132" width="164" height="11" rx="5" fill="#C98A5B"/>
+  <circle cx="82" cy="126" r="13" fill="#fff" stroke="#E4D9C5" stroke-width="2"/><circle cx="158" cy="126" r="13" fill="#fff" stroke="#E4D9C5" stroke-width="2"/>
+</symbol>
+<symbol id="ic-house" viewBox="0 0 240 180">
+  <rect width="240" height="180" rx="14" fill="#FDF6EC"/>
+  <rect x="0" y="150" width="240" height="30" fill="#CFE3C4"/>
+  <rect x="66" y="86" width="108" height="66" rx="6" fill="#FBF3E4" stroke="#E4D9C5" stroke-width="2"/>
+  <path d="M54 92 L120 44 L186 92 Z" fill="#EE6C4D"/>
+  <rect x="108" y="112" width="26" height="40" rx="4" fill="#3E8E8A"/>
+  <rect x="80" y="100" width="20" height="20" rx="3" fill="#F2A93B" opacity=".85"/><rect x="140" y="100" width="20" height="20" rx="3" fill="#F2A93B" opacity=".85"/>
+</symbol>
+</svg>
+
+<header class="top">
+  <div class="top-in">
+    <span class="lesson-tag">Practical English 5</span>
+    <span class="lesson-name" id="topTitle">Would you like to come? — Inviting and offering</span>
+    <button class="btn-teacher" id="btnTeacher" aria-haspopup="dialog">Teacher</button>
+  </div>
+  <div class="progress" aria-hidden="true"><div class="bar" id="progBar"></div></div>
+</header>
+
+<main class="wrap" id="main">
+
+<!-- ══════════════ SCREEN 1 — INTRODUCTION & REFERENCE ══════════════ -->
+<section class="screen active" id="s1" data-stage="Preparation" data-time="~3 min">
+  <span class="stage">Before we start</span><span class="timechip">~3 minutes</span>
+  <h2>Would you like to come?</h2>
+  <p class="lead">Practical English 5 · Inviting and offering · Level A1–A2 · 90 minutes</p>
+
+  <figure class="shot"><div class="hero-frame media-slot">
+    <img src="assets/images/invite.png" alt="Two friends at an evening party. One friend gives an invitation card to the other." onerror="mediaFallback(this)">
+    <svg class="fallback" role="img" aria-label="Two friends at an evening party. One friend gives an invitation card to the other."><use href="#ic-hero"/></svg>
+  </div><figcaption>Would you like to come to the party?</figcaption></figure>
+
+  <div class="overview">
+    In this lesson, you’ll learn how to <b>invite people</b> and how to <b>answer invitations</b> — to a party, the cinema or a concert. You’ll practise the polite phrases <b><i>would you like</i> + noun</b> and <b><i>would you like</i> + <i>to</i> + verb</b>, watch two short videos, and hear real invitations.
+  </div>
+
+  <div class="refcards" role="tablist" aria-label="Reference sections">
+    <button class="refcard" id="card-vocab" role="tab" aria-selected="false" aria-controls="ref-vocab" onclick="toggleRef('vocab')">
+      <span class="rc-ico" aria-hidden="true">📖</span>
+      <span class="rc-t">Vocabulary</span>
+      <span class="rc-s">Inviting, offering and social events</span>
+    </button>
+    <button class="refcard" id="card-grammar" role="tab" aria-selected="false" aria-controls="ref-grammar" onclick="toggleRef('grammar')">
+      <span class="rc-ico" aria-hidden="true">🧩</span>
+      <span class="rc-t">Grammar: would you like…?</span>
+      <span class="rc-s">Offers, invitations and answers</span>
+    </button>
+  </div>
+
+  <div class="refpanel" id="ref-vocab" role="tabpanel" aria-labelledby="card-vocab">
+    <h3 style="color:var(--teal-d)">Vocabulary for this lesson</h3>
+    <p style="color:var(--muted);font-size:15px;margin:6px 0">Click any word or phrase to see its card: picture, transcription, audio, definition and translation.</p>
+    <div class="vocab-list" id="vocabList"></div>
+    <div class="vocab-list hidden" id="vocabExtra"></div>
+    <button class="linkbtn" id="btnMoreVocab" onclick="toggleMoreVocab()">Show full list ↓</button>
+  </div>
+
+  <div class="refpanel" id="ref-grammar" role="tabpanel" aria-labelledby="card-grammar">
+    <h3 style="color:var(--teal-d)">Would you like…?</h3>
+    <p style="margin:8px 0">We use <span class="hi">would you like</span> to <b>offer</b> something or to <b>invite</b> someone. It is polite and friendly.</p>
+
+    <div class="gform">
+      <div class="formula">1 · Offer: <em>Would you like</em> + noun?</div>
+      <ul class="exs">
+        <li><span class="w" data-v="wouldlike" role="button" tabindex="0">Would you like</span> a <span class="w" data-v="cup" role="button" tabindex="0">cup</span> of coffee?</li>
+        <li>Would you like some help with the <span class="w" data-v="invitation" role="button" tabindex="0">invitations</span>?</li>
+      </ul>
+    </div>
+
+    <div class="gform">
+      <div class="formula">2 · Invitation: <em>Would you like</em> + <em>to</em> + verb?</div>
+      <ul class="exs">
+        <li>Would you like <span class="hi">to come</span> to my party on Saturday?</li>
+        <li>Would you like <span class="hi">to go</span> to <span class="w" data-v="cinema" role="button" tabindex="0">the cinema</span> on Friday?</li>
+      </ul>
+    </div>
+
+    <table class="gtab">
+      <tr><th>Answer</th><th>Positive ✓</th><th>Negative ✗ (polite)</th></tr>
+      <tr>
+        <td><b>Offer</b><br>(Would you like a coffee?)</td>
+        <td>Yes, please!</td>
+        <td>No, thank you. I’m fine.</td>
+      </tr>
+      <tr>
+        <td><b>Invitation</b><br>(Would you like to come?)</td>
+        <td><span class="w" data-v="idlove" role="button" tabindex="0">I’d love to</span>!<br><span class="w" data-v="great" role="button" tabindex="0">That sounds great</span>!</td>
+        <td>I’d love to, <b>but</b> <span class="w" data-v="busy" role="button" tabindex="0">I’m busy</span>.<br><span class="w" data-v="anothertime" role="button" tabindex="0">Maybe another time</span>.</td>
+      </tr>
+    </table>
+
+    <div class="note">
+      💡 <b>Remember:</b> <span class="hi">I’d</span> = <span class="hi">I would</span>. After <i>would you like</i> we use <span class="hi">to + verb</span> — never <i>“Would you like come…”</i>. To say politely what you want, use <span class="w" data-v="idlike" role="button" tabindex="0">I’d like</span>: <i>“I’d like a coffee, please.”</i> With close friends, <i>“Do you want…?”</i> is also OK, but <i>“Would you like…?”</i> is more polite.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ SCREEN 2 — REVISION (9B) ══════════════ -->
+<section class="screen" id="s2" data-stage="Revision" data-time="~7 min">
+  <span class="stage">Revision</span><span class="timechip">~7 minutes</span>
+  <h2>Let’s remember Lesson 9B</h2>
+  <p class="lead">In Lesson 9B, “Watching and waiting”, you looked at clothes and practised the <b>present simple</b> and <b>present continuous</b>.</p>
+
+  <div class="card ex" id="ex-rev1">
+    <p class="instr"><span class="num">1</span>Match the clothes to their meanings. Drag a word, or click the word and then click the meaning.</p>
+    <div class="tray" aria-label="Words to place">
+      <button class="sitem" draggable="true" data-ex="rev1" data-item="i1" data-val="d1"><span class="w" data-v="jacket" role="button" tabindex="0">jacket</span></button>
+      <button class="sitem" draggable="true" data-ex="rev1" data-item="i2" data-val="d2"><span class="w" data-v="scarf" role="button" tabindex="0">scarf</span></button>
+      <button class="sitem" draggable="true" data-ex="rev1" data-item="i3" data-val="d3"><span class="w" data-v="trainers" role="button" tabindex="0">trainers</span></button>
+      <button class="sitem" draggable="true" data-ex="rev1" data-item="i4" data-val="d4"><span class="w" data-v="gloves" role="button" tabindex="0">gloves</span></button>
+    </div>
+    <div class="zones">
+      <div class="zone" data-zone="d1"><div class="zone-title">a short coat you wear over a shirt</div><div class="zone-items"></div></div>
+      <div class="zone" data-zone="d2"><div class="zone-title">a piece of cloth you wear round your neck</div><div class="zone-items"></div></div>
+      <div class="zone" data-zone="d3"><div class="zone-title">comfortable shoes you wear for sport</div><div class="zone-items"></div></div>
+      <div class="zone" data-zone="d4"><div class="zone-title">you wear these on your hands on cold days</div><div class="zone-items"></div></div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('rev1')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+
+  <div class="card ex" id="ex-rev2">
+    <p class="instr"><span class="num">2</span>Choose the correct form: present simple or present continuous.</p>
+    <div class="q" data-ex="rev2" data-item="q1" data-correct="b">
+      <p class="qtext"><span class="qn">1</span> Look! She ___ a beautiful red dress.</p>
+      <div class="opts"><button class="opt" data-val="a">wears</button><button class="opt" data-val="b">is wearing</button><button class="opt" data-val="c">wear</button></div>
+    </div>
+    <div class="q" data-ex="rev2" data-item="q2" data-correct="a">
+      <p class="qtext"><span class="qn">2</span> Tom ___ jeans to work every day.</p>
+      <div class="opts"><button class="opt" data-val="a">wears</button><button class="opt" data-val="b">is wearing</button><button class="opt" data-val="c">wearing</button></div>
+    </div>
+    <div class="q" data-ex="rev2" data-item="q3" data-correct="b">
+      <p class="qtext"><span class="qn">3</span> They ___ football in the park at the moment.</p>
+      <div class="opts"><button class="opt" data-val="a">play</button><button class="opt" data-val="b">are playing</button><button class="opt" data-val="c">plays</button></div>
+    </div>
+    <div class="q" data-ex="rev2" data-item="q4" data-correct="a">
+      <p class="qtext"><span class="qn">4</span> We usually ___ dinner at about seven o’clock.</p>
+      <div class="opts"><button class="opt" data-val="a">have</button><button class="opt" data-val="b">are having</button><button class="opt" data-val="c">has</button></div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('rev2')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+
+  <div class="bridge">🔗 Last lesson you talked about clothes and what people <b>are wearing</b> now. Today you’ll learn how to <b>invite friends out</b> — to the cinema, a concert or a party — and what to say when someone invites <b>you</b>!</div>
+</section>
+
+<!-- ══════════════ SCREEN 3 — WARM-UP ══════════════ -->
+<section class="screen" id="s3" data-stage="Warm-up" data-time="~5 min">
+  <span class="stage">Warm-up</span><span class="timechip">~5 minutes</span>
+  <h2>A free evening with friends</h2>
+  <p class="lead">First, choose your favourite way to spend a free evening. Click one picture. Then talk about it with your teacher.</p>
+
+  <div class="picks" role="group" aria-label="Choose your ideal free evening">
+    <button class="pick" aria-pressed="false" onclick="pickOne(this)"><svg role="img" aria-label="Staying at home"><use href="#ic-house"/></svg>Stay at home</button>
+    <button class="pick media-slot" aria-pressed="false" onclick="pickOne(this)">
+      <img src="assets/images/cinema.png" alt="People watching a film on a big screen in a cinema" onerror="mediaFallback(this)">
+      <svg class="fallback" role="img" aria-label="People watching a film on a big screen in a cinema"><use href="#ic-cinema"/></svg>
+      Go to <span class="w" data-v="cinema" role="button" tabindex="0">the cinema</span>
+    </button>
+    <button class="pick media-slot" aria-pressed="false" onclick="pickOne(this)">
+      <img src="assets/images/restaurant.png" alt="Two people having dinner at a table in a restaurant" onerror="mediaFallback(this)">
+      <svg class="fallback" role="img" aria-label="Two people having dinner at a table in a restaurant"><use href="#ic-restaurant"/></svg>
+      Eat in a <span class="w" data-v="restaurant" role="button" tabindex="0">restaurant</span>
+    </button>
+    <button class="pick media-slot" aria-pressed="false" onclick="pickOne(this)">
+      <img src="assets/images/concert.png" alt="A band playing live music on stage at a concert" onerror="mediaFallback(this)">
+      <svg class="fallback" role="img" aria-label="A band playing live music on stage at a concert"><use href="#ic-concert"/></svg>
+      Go to a <span class="w" data-v="concert" role="button" tabindex="0">concert</span>
+    </button>
+    <button class="pick media-slot" aria-pressed="false" onclick="pickOne(this)">
+      <img src="assets/images/football_match.png" alt="Players and a ball on the pitch at a football match" onerror="mediaFallback(this)">
+      <svg class="fallback" role="img" aria-label="Players and a ball on the pitch at a football match"><use href="#ic-football"/></svg>
+      Watch a <span class="w" data-v="match" role="button" tabindex="0">football match</span>
+    </button>
+  </div>
+
+  <div class="card">
+    <ol class="qlist">
+      <li>What do you usually do at the weekend?</li>
+      <li>Look at your choice above. Why do you like it?</li>
+      <li>Do you prefer a quiet evening at home or time with friends? Why?</li>
+      <li>Who do you like spending your free time with?</li>
+    </ol>
+  </div>
+
+  <div class="useful">
+    <h4>Useful language</h4>
+    <ul>
+      <li>At the weekend I usually…</li>
+      <li>I prefer … to …</li>
+      <li>I like …-ing with my friends.</li>
+      <li>In my opinion, …</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════ SCREEN 4 — VOCABULARY LEAD-IN ══════════════ -->
+<section class="screen" id="s4" data-stage="Vocabulary" data-time="~8 min">
+  <span class="stage">Vocabulary</span><span class="timechip">~8 minutes</span>
+  <h2>Look, think and match</h2>
+  <p class="lead">These are social events — things you can <span class="w" data-v="invite" role="button" tabindex="0">invite</span> friends to.</p>
+
+  <div class="card ex" id="ex-vl1">
+    <p class="instr"><span class="num">1</span>Match the words to the pictures. Drag a word onto a picture, or click the word and then click the picture.</p>
+    <div class="tray" aria-label="Words to place">
+      <button class="sitem" draggable="true" data-ex="vl1" data-item="i1" data-val="cinema">the cinema</button>
+      <button class="sitem" draggable="true" data-ex="vl1" data-item="i2" data-val="concert">a concert</button>
+      <button class="sitem" draggable="true" data-ex="vl1" data-item="i3" data-val="party">a birthday party</button>
+      <button class="sitem" draggable="true" data-ex="vl1" data-item="i4" data-val="match">a football match</button>
+      <button class="sitem" draggable="true" data-ex="vl1" data-item="i5" data-val="wedding">a wedding</button>
+      <button class="sitem" draggable="true" data-ex="vl1" data-item="i6" data-val="restaurant">a restaurant</button>
+    </div>
+    <div class="zones grid6" style="display:grid">
+      <div class="zone piczone media-slot" data-zone="cinema">
+        <img src="assets/images/cinema.png" alt="People watching a film on a big screen in a cinema" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="People watching a film on a big screen in a cinema"><use href="#ic-cinema"/></svg>
+        <div class="zone-items"></div>
+      </div>
+      <div class="zone piczone media-slot" data-zone="concert">
+        <img src="assets/images/concert.png" alt="A band playing live music on stage at a concert" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="A band playing live music on stage at a concert"><use href="#ic-concert"/></svg>
+        <div class="zone-items"></div>
+      </div>
+      <div class="zone piczone media-slot" data-zone="party">
+        <img src="assets/images/birthday.png" alt="A birthday cake with candles and balloons at a birthday party" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="A birthday cake with candles and balloons at a birthday party"><use href="#ic-party"/></svg>
+        <div class="zone-items"></div>
+      </div>
+      <div class="zone piczone media-slot" data-zone="match">
+        <img src="assets/images/football_match.png" alt="Players and a ball on the pitch at a football match" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="Players and a ball on the pitch at a football match"><use href="#ic-football"/></svg>
+        <div class="zone-items"></div>
+      </div>
+      <div class="zone piczone media-slot" data-zone="wedding">
+        <img src="assets/images/wedding.png" alt="A couple celebrating their wedding under a flower arch" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="A couple celebrating their wedding under a flower arch"><use href="#ic-wedding"/></svg>
+        <div class="zone-items"></div>
+      </div>
+      <div class="zone piczone media-slot" data-zone="restaurant">
+        <img src="assets/images/restaurant.png" alt="Two people having dinner at a table in a restaurant" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="Two people having dinner at a table in a restaurant"><use href="#ic-restaurant"/></svg>
+        <div class="zone-items"></div>
+      </div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('vl1')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+
+  <div class="card">
+    <p class="instr" style="margin-bottom:6px">Read this short conversation:</p>
+    <div class="dlg">
+      <div class="line"><span class="spk">Anna:</span><span>Hi Ben! <span class="w" data-v="wouldlike" role="button" tabindex="0">Would you like</span> to come to my <span class="w" data-v="party" role="button" tabindex="0">party</span> on Saturday?</span></div>
+      <div class="line"><span class="spk">Ben:</span><span>…</span></div>
+    </div>
+  </div>
+
+  <div class="card ex" id="ex-vl2">
+    <p class="instr"><span class="num">2</span>How can Ben answer? Put the phrases in the correct group: <b>saying yes</b> or <b>saying no (politely)</b>.</p>
+    <div class="tray" aria-label="Phrases to sort">
+      <button class="sitem" draggable="true" data-ex="vl2" data-item="i1" data-val="yes">Yes, please!</button>
+      <button class="sitem" draggable="true" data-ex="vl2" data-item="i2" data-val="yes">I’d love to.</button>
+      <button class="sitem" draggable="true" data-ex="vl2" data-item="i3" data-val="yes">That sounds great!</button>
+      <button class="sitem" draggable="true" data-ex="vl2" data-item="i4" data-val="no">I’d love to, but I’m busy.</button>
+      <button class="sitem" draggable="true" data-ex="vl2" data-item="i5" data-val="no">Sorry, I can’t.</button>
+      <button class="sitem" draggable="true" data-ex="vl2" data-item="i6" data-val="no">Maybe another time.</button>
+    </div>
+    <div class="zones cols2">
+      <div class="zone" data-zone="yes"><div class="zone-title">✓ Saying yes (accepting)</div><div class="zone-items"></div></div>
+      <div class="zone" data-zone="no"><div class="zone-title">✗ Saying no politely (declining)</div><div class="zone-items"></div></div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('vl2')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+</section>
+
+<!-- ══════════════ SCREEN 5 — VIDEO: INVITING AND OFFERING ══════════════ -->
+<section class="screen" id="s5" data-stage="Video" data-time="~12 min">
+  <span class="stage">Video</span><span class="timechip">~12 minutes</span>
+  <h2>Inviting and offering</h2>
+  <p class="lead">Watch the video about Rob and Alan. Then do the tasks below.</p>
+
+  <div class="card video-wrap">
+    <video id="pe5video" class="lesson-video" controls preload="metadata" src="assets/video/inviting.mp4" aria-label="Video: Inviting and offering">
+      Your browser cannot play this video.
+    </video>
+    <p class="note hidden" id="videoMissing">⚠️ The video file <code>assets/video/inviting.mp4</code> was not found. Use the “Listen (audio only)” button below, or the teacher reads the script aloud (see Teacher panel).</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      <button class="btn-play" id="btnVPlay" onclick="vPlay()">▶ Listen (audio only)</button>
+      <button class="btn-stop" id="btnVStop" onclick="vStop()" disabled>■ Stop</button>
+      <button class="btn-stop" id="btnVScript" onclick="toggleVScript()">Show video script</button>
+    </div>
+    <div class="dlg hidden" id="vscript" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card ex" id="ex-va">
+    <p class="instr"><span class="num">1a</span>Watch the video. Number the photos 1–3: which photo is first, second and third in the video? Click a number under each photo.</p>
+    <div class="photos">
+      <div class="q photocard media-slot" data-ex="va" data-item="A" data-correct="2">
+        <img src="assets/images/a.png" alt="Photo A: three men standing in a stadium corridor" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="Photo A: three men standing in a stadium corridor"><use href="#ic-photoA"/></svg>
+        <span class="phlabel" aria-hidden="true">A</span>
+        <div class="opts"><button class="opt" data-val="1">1</button><button class="opt" data-val="2">2</button><button class="opt" data-val="3">3</button></div>
+      </div>
+      <div class="q photocard media-slot" data-ex="va" data-item="B" data-correct="1">
+        <img src="assets/images/b.png" alt="Photo B: two colleagues talking in an open-plan office" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="Photo B: two colleagues talking in an open-plan office"><use href="#ic-photoB"/></svg>
+        <span class="phlabel" aria-hidden="true">B</span>
+        <div class="opts"><button class="opt" data-val="1">1</button><button class="opt" data-val="2">2</button><button class="opt" data-val="3">3</button></div>
+      </div>
+      <div class="q photocard media-slot" data-ex="va" data-item="C" data-correct="3">
+        <img src="assets/images/c.png" alt="Photo C: ordering food and drinks at the stadium snack bar" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="Photo C: ordering food and drinks at the stadium snack bar"><use href="#ic-photoC"/></svg>
+        <span class="phlabel" aria-hidden="true">C</span>
+        <div class="opts"><button class="opt" data-val="1">1</button><button class="opt" data-val="2">2</button><button class="opt" data-val="3">3</button></div>
+      </div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('va')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+
+  <div class="card ex" id="ex-vb1">
+    <p class="instr"><span class="num">1b</span>Watch again. Complete conversation 1 with a word or time from the list. Drag a word into a gap, or click the word and then click the gap.</p>
+    <div class="tray" aria-label="Word list 1">
+      <button class="sitem" draggable="true" data-ex="vb1" data-item="w1" data-val="g5">birthday</button>
+      <button class="sitem" draggable="true" data-ex="vb1" data-item="w2" data-val="g3">4.00</button>
+      <button class="sitem" draggable="true" data-ex="vb1" data-item="w3" data-val="g4">lunch</button>
+      <button class="sitem" draggable="true" data-ex="vb1" data-item="w4" data-val="g1">match</button>
+      <button class="sitem" draggable="true" data-ex="vb1" data-item="w5" data-val="g2">Sunday</button>
+      <button class="sitem" draggable="true" data-ex="vb1" data-item="w6" data-val="g6">3.30</button>
+    </div>
+    <div class="dlg">
+      <div class="line"><span class="spk">Rob:</span><span>Hey, Alan. <span class="w hl" data-v="wouldlike" role="button" tabindex="0">Would you like</span> to come to the <span class="gap zone" data-ex="vb1" data-zone="g1" aria-label="Gap 1"></span> with me on <span class="gap zone" data-ex="vb1" data-zone="g2" aria-label="Gap 2"></span>? It’s Norwich against Chelsea, and I have two tickets.</span></div>
+      <div class="line"><span class="spk">Alan:</span><span>Wow! What time’s the match?</span></div>
+      <div class="line"><span class="spk">Rob:</span><span>It’s at <span class="gap zone" data-ex="vb1" data-zone="g3" aria-label="Gap 3"></span>.</span></div>
+      <div class="line"><span class="spk">Alan:</span><span>Yeah, <span class="w" data-v="idlove" role="button" tabindex="0">I’d love to</span>. Thanks.</span></div>
+      <div class="line"><span class="spk">Rob:</span><span><span class="w hl" data-v="wouldlike" role="button" tabindex="0">Would you like</span> to meet for <span class="gap zone" data-ex="vb1" data-zone="g4" aria-label="Gap 4"></span> first?</span></div>
+      <div class="line"><span class="spk">Alan:</span><span>Sorry, I can’t. It’s my mum’s <span class="gap zone" data-ex="vb1" data-zone="g5" aria-label="Gap 5"></span>, and I need to have lunch with her. But I can meet you there.</span></div>
+      <div class="line"><span class="spk">Rob:</span><span>Great. Let’s meet at <span class="gap zone" data-ex="vb1" data-zone="g6" aria-label="Gap 6"></span> at the <span class="w" data-v="entrance" role="button" tabindex="0">entrance</span> to the <span class="w" data-v="tube" role="button" tabindex="0">Tube</span> station.</span></div>
+      <div class="line"><span class="spk">Alan:</span><span>Fine. See you there.</span></div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('vb1')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+
+  <div class="card ex" id="ex-vb2">
+    <p class="instr"><span class="num">1b</span>Complete conversation 2 with a word from the list.</p>
+    <div class="tray" aria-label="Word list 2">
+      <button class="sitem" draggable="true" data-ex="vb2" data-item="w1" data-val="g8">burger</button>
+      <button class="sitem" draggable="true" data-ex="vb2" data-item="w2" data-val="g10">coffee</button>
+      <button class="sitem" draggable="true" data-ex="vb2" data-item="w3" data-val="g9">hungry</button>
+      <button class="sitem" draggable="true" data-ex="vb2" data-item="w4" data-val="g7">know</button>
+      <button class="sitem" draggable="true" data-ex="vb2" data-item="w5" data-val="g12">milk</button>
+      <button class="sitem" draggable="true" data-ex="vb2" data-item="w6" data-val="g11">water</button>
+    </div>
+    <div class="dlg">
+      <div class="line"><span class="spk">Alan:</span><span>They are playing really badly. I hope the second half is better.</span></div>
+      <div class="line"><span class="spk">Rob:</span><span>Me too. I <span class="gap zone" data-ex="vb2" data-zone="g7" aria-label="Gap 7"></span> they can win. <span class="w hl" data-v="wouldlike" role="button" tabindex="0">Would you like</span> a <span class="gap zone" data-ex="vb2" data-zone="g8" aria-label="Gap 8"></span>?</span></div>
+      <div class="line"><span class="spk">Alan:</span><span>No, thanks. I’m not very <span class="gap zone" data-ex="vb2" data-zone="g9" aria-label="Gap 9"></span>.</span></div>
+      <div class="line"><span class="spk">Rob:</span><span>How about a <span class="gap zone" data-ex="vb2" data-zone="g10" aria-label="Gap 10"></span>?</span></div>
+      <div class="line"><span class="spk">Alan:</span><span>Yeah, great.</span></div>
+      <div class="line"><span class="spk">Rob:</span><span>A burger and a <span class="gap zone" data-ex="vb2" data-zone="g11" aria-label="Gap 11"></span>, please.</span></div>
+      <div class="line"><span class="spk">Alan:</span><span>And <span class="w hl" data-v="idlike" role="button" tabindex="0">I’d like</span> a coffee.</span></div>
+      <div class="line"><span class="spk">Barman:</span><span><span class="gap zone" data-ex="vb2" data-zone="g12" aria-label="Gap 12"></span> and sugar?</span></div>
+      <div class="line"><span class="spk">Alan:</span><span>Yes, please.</span></div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('vb2')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+
+  <div class="card">
+    <p class="instr"><span class="num">1c</span>Look at the <span class="hl">highlighted</span> phrases in the conversations. Talk with your teacher: what do you think <b><i>Would you like…?</i></b> and <b><i>I’d like</i></b> mean? When do Rob and Alan use them?</p>
+    <div class="useful" style="margin-top:10px">
+      <h4>Think about</h4>
+      <ul>
+        <li>Is <i>“Would you like…?”</i> asking about now, or offering / inviting?</li>
+        <li>Is <i>“I’d like…”</i> an invitation or a polite request?</li>
+        <li>Where else can you hear these phrases — in a café? at work?</li>
+      </ul>
+    </div>
+
+    <div class="evt-row" role="group" aria-label="Social events">
+      <div class="evt media-slot">
+        <img src="assets/images/cinema.png" alt="People watching a film on a big screen in a cinema" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="People watching a film on a big screen in a cinema"><use href="#ic-cinema"/></svg>
+        <span class="w" data-v="cinema" role="button" tabindex="0">the cinema</span>
+      </div>
+      <div class="evt media-slot">
+        <img src="assets/images/concert.png" alt="A band playing live music on stage at a concert" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="A band playing live music on stage at a concert"><use href="#ic-concert"/></svg>
+        <span class="w" data-v="concert" role="button" tabindex="0">a concert</span>
+      </div>
+      <div class="evt media-slot">
+        <img src="assets/images/birthday.png" alt="A birthday cake with candles and balloons at a birthday party" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="A birthday cake with candles and balloons at a birthday party"><use href="#ic-party"/></svg>
+        <span class="w" data-v="birthday" role="button" tabindex="0">a birthday party</span>
+      </div>
+      <div class="evt media-slot">
+        <img src="assets/images/football_match.png" alt="Players and a ball on the pitch at a football match" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="Players and a ball on the pitch at a football match"><use href="#ic-football"/></svg>
+        <span class="w" data-v="match" role="button" tabindex="0">a football match</span>
+      </div>
+      <div class="evt media-slot">
+        <img src="assets/images/wedding.png" alt="A couple celebrating their wedding under a flower arch" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="A couple celebrating their wedding under a flower arch"><use href="#ic-wedding"/></svg>
+        <span class="w" data-v="wedding" role="button" tabindex="0">a wedding</span>
+      </div>
+      <div class="evt media-slot">
+        <img src="assets/images/restaurant.png" alt="Two people having dinner at a table in a restaurant" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="Two people having dinner at a table in a restaurant"><use href="#ic-restaurant"/></svg>
+        <span class="w" data-v="restaurant" role="button" tabindex="0">a restaurant</span>
+      </div>
+    </div>
+    <p style="margin:4px 0 0;font-size:16px">Now look at the events. Choose one or two and tell your teacher: <b>“I’d like to go to … because …”</b> There is no right or wrong answer.</p>
+  </div>
+
+  <div class="bridge">🎬 In the video you heard <b>“Would you like…?”</b> for invitations and offers. On the next screen we’ll look at the forms and the answers — and you can check your ideas from 1c.</div>
+</section>
+
+<!-- ══════════════ SCREEN 6 — LANGUAGE FOCUS ══════════════ -->
+<section class="screen" id="s6" data-stage="Language focus" data-time="~8 min">
+  <span class="stage">Language focus</span><span class="timechip">~8 minutes</span>
+  <h2>Inviting and offering with “would you like”</h2>
+  <p class="lead">You saw <i>Would you like…?</i> and <i>I’d like</i> in the video. Now listen, look and repeat. Click 🔊 to hear each example in British English.</p>
+
+  <div class="func-grid">
+    <div class="func">
+      <h4>1 · Offering something 🫖</h4>
+      <div class="big">Would you like + <em>noun</em>?</div>
+      <div class="row-audio"><button class="btn-audio" onclick="speak('Would you like a cup of coffee?')">🔊 Listen</button><span>Would you like a cup of coffee?</span></div>
+      <div class="row-audio"><button class="btn-audio" onclick="speak('Would you like some help with the invitations?')">🔊 Listen</button><span>Would you like some help with the invitations?</span></div>
+      <p style="font-size:14.5px;color:var(--muted);margin:8px 0 0">Answer: <b>Yes, please!</b> · <b>No, thank you. I’m fine.</b></p>
+    </div>
+    <div class="func">
+      <h4>2 · Inviting someone 🎟️</h4>
+      <div class="big">Would you like + <em>to</em> + verb?</div>
+      <div class="row-audio"><button class="btn-audio" onclick="speak('Would you like to come to my party on Saturday?')">🔊 Listen</button><span>Would you like to come to my party?</span></div>
+      <div class="row-audio"><button class="btn-audio" onclick="speak('Would you like to go to the cinema on Friday?')">🔊 Listen</button><span>Would you like to go to the cinema?</span></div>
+      <p style="font-size:14.5px;color:var(--muted);margin:8px 0 0">Answer: <b>I’d love to!</b> · <b>I’d love to, but I’m busy.</b></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="color:var(--teal-d);font-size:17px">Answering an invitation</h3>
+    <table class="gtab">
+      <tr><th style="width:50%">✓ Accepting</th><th>✗ Declining politely</th></tr>
+      <tr>
+        <td>
+          <div class="row-audio"><button class="btn-audio" onclick="speak('I would love to!')">🔊</button> I’d love to!</div>
+          <div class="row-audio"><button class="btn-audio" onclick="speak('That sounds great!')">🔊</button> That sounds great!</div>
+          <div class="row-audio"><button class="btn-audio" onclick="speak('Yes, please!')">🔊</button> Yes, please!</div>
+        </td>
+        <td>
+          <div class="row-audio"><button class="btn-audio" onclick="speak('I would love to, but I am busy. Sorry!')">🔊</button> I’d love to, but I’m busy. Sorry!</div>
+          <div class="row-audio"><button class="btn-audio" onclick="speak('Sorry, I can not.')">🔊</button> Sorry, I can’t.</div>
+          <div class="row-audio"><button class="btn-audio" onclick="speak('Maybe another time.')">🔊</button> Maybe another time.</div>
+        </td>
+      </tr>
+    </table>
+    <div class="note">💡 <b>I’d</b> = <b>I would</b>. <span class="w" data-v="idlike" role="button" tabindex="0">I’d like</span> = a polite way to say what you want: <i>“I’d like a coffee, please.”</i> When we decline politely, we usually say something positive first: <i>“I’d love to, but…”</i> — this is friendly in British culture.</div>
+  </div>
+</section>
+
+<!-- ══════════════ SCREEN 7 — CONTROLLED PRACTICE ══════════════ -->
+<section class="screen" id="s7" data-stage="Practice" data-time="~9 min">
+  <span class="stage">Practice</span><span class="timechip">~9 minutes</span>
+  <h2>Let’s practise</h2>
+  <p class="lead">Two short tasks. Your answers are checked immediately.</p>
+
+  <div class="card ex" id="ex-cp1">
+    <p class="instr"><span class="num">1</span>Choose the correct words to complete the sentences.</p>
+    <div class="q" data-ex="cp1" data-item="q1" data-correct="a">
+      <p class="qtext"><span class="qn">1</span> ___ you like a cup of tea?</p>
+      <div class="opts"><button class="opt" data-val="a">Would</button><button class="opt" data-val="b">Are</button><button class="opt" data-val="c">Do</button></div>
+    </div>
+    <div class="q" data-ex="cp1" data-item="q2" data-correct="b">
+      <p class="qtext"><span class="qn">2</span> Would you like ___ to the concert on Saturday?</p>
+      <div class="opts"><button class="opt" data-val="a">come</button><button class="opt" data-val="b">to come</button><button class="opt" data-val="c">coming</button></div>
+    </div>
+    <div class="q" data-ex="cp1" data-item="q3" data-correct="c">
+      <p class="qtext"><span class="qn">3</span> A: Would you like to come on Friday? &nbsp;B: ___, but I’m busy.</p>
+      <div class="opts"><button class="opt" data-val="a">Yes, please</button><button class="opt" data-val="b">That sounds great</button><button class="opt" data-val="c">I’d love to</button></div>
+    </div>
+    <div class="q" data-ex="cp1" data-item="q4" data-correct="a">
+      <p class="qtext"><span class="qn">4</span> Would you like ___ to drink?</p>
+      <div class="opts"><button class="opt" data-val="a">something</button><button class="opt" data-val="b">anything</button><button class="opt" data-val="c">nothing</button></div>
+    </div>
+    <div class="q" data-ex="cp1" data-item="q5" data-correct="b">
+      <p class="qtext"><span class="qn">5</span> I’d love to come, ___ I’m working that evening.</p>
+      <div class="opts"><button class="opt" data-val="a">so</button><button class="opt" data-val="b">but</button><button class="opt" data-val="c">because</button></div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('cp1')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+
+  <div class="card ex" id="ex-cp2">
+    <p class="instr"><span class="num">2</span>Complete the conversation. Drag the phrases into the gaps, or click a phrase and then click a gap.</p>
+    <div class="tray" aria-label="Phrase bank">
+      <button class="sitem" draggable="true" data-ex="cp2" data-item="i1" data-val="g1">Would you like</button>
+      <button class="sitem" draggable="true" data-ex="cp2" data-item="i2" data-val="g2">I’d love to</button>
+      <button class="sitem" draggable="true" data-ex="cp2" data-item="i3" data-val="g3">Maybe another time</button>
+      <button class="sitem" draggable="true" data-ex="cp2" data-item="i4" data-val="g4">That sounds great</button>
+    </div>
+    <div class="dlg">
+      <div class="line"><span class="spk">Anna:</span><span>Hi Ben! <span class="gap zone" data-ex="cp2" data-zone="g1" aria-label="Gap 1"></span> to come to my party on Saturday?</span></div>
+      <div class="line"><span class="spk">Ben:</span><span><span class="gap zone" data-ex="cp2" data-zone="g2" aria-label="Gap 2"></span>, but I’m working on Saturday. Sorry!</span></div>
+      <div class="line"><span class="spk">Anna:</span><span>No problem. <span class="gap zone" data-ex="cp2" data-zone="g3" aria-label="Gap 3"></span>, then?</span></div>
+      <div class="line"><span class="spk">Ben:</span><span>Yes! How about Sunday afternoon?</span></div>
+      <div class="line"><span class="spk">Anna:</span><span><span class="gap zone" data-ex="cp2" data-zone="g4" aria-label="Gap 4"></span>! Let’s meet at two o’clock.</span></div>
+      <div class="line"><span class="spk">Ben:</span><span>Perfect. See you on Sunday!</span></div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('cp2')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+</section>
+
+<!-- ══════════════ SCREEN 8 — LISTENING (generated dialogue) ══════════════ -->
+<section class="screen" id="s8" data-stage="Listening" data-time="~6 min">
+  <span class="stage">Listening</span><span class="timechip">~6 minutes</span>
+  <h2>Emma invites David</h2>
+  <p class="lead">Listen to one more conversation between Emma and David. Then answer the questions.</p>
+
+  <figure class="shot media-slot" style="max-width:340px;margin:0 auto">
+    <img src="assets/images/cinema.png" alt="People watching a film on a big screen in a cinema — Emma and David’s plan" onerror="mediaFallback(this)">
+    <svg class="fallback" role="img" aria-label="People watching a film on a big screen in a cinema — Emma and David’s plan"><use href="#ic-cinema"/></svg>
+  </figure>
+
+  <div class="card" style="text-align:center">
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-play" id="btnPlayDlg" onclick="playDialogue()">▶ Play conversation</button>
+      <button class="btn-stop" id="btnStopDlg" onclick="stopDialogue()" disabled>■ Stop</button>
+      <button class="btn-stop" onclick="toggleTranscript()" id="btnTranscript">Show transcript</button>
+    </div>
+    <p class="note" style="text-align:left;margin-top:14px" id="ttsNote" hidden>⚠️ Audio is not available in this browser. The full script is in the transcript below and in the Teacher panel — the teacher can read it aloud.</p>
+
+    <div class="dlg hidden" id="transcript" style="text-align:left">
+      <div class="line" data-l="0"><span class="spk">Emma:</span><span>Hi David! What are you doing on Friday evening?</span></div>
+      <div class="line" data-l="1"><span class="spk">David:</span><span>Nothing special. Why?</span></div>
+      <div class="line" data-l="2"><span class="spk">Emma:</span><span>Would you like to come to the cinema? There’s a new <span class="w" data-v="film" role="button" tabindex="0">film</span> on.</span></div>
+      <div class="line" data-l="3"><span class="spk">David:</span><span>That sounds great! What time does it start?</span></div>
+      <div class="line" data-l="4"><span class="spk">Emma:</span><span>At seven. Would you like a coffee before the film?</span></div>
+      <div class="line" data-l="5"><span class="spk">David:</span><span>I’d love to, but I finish work at six. Maybe a coffee after the film?</span></div>
+      <div class="line" data-l="6"><span class="spk">Emma:</span><span>Good idea! See you at the cinema at seven.</span></div>
+      <div class="line" data-l="7"><span class="spk">David:</span><span>Perfect. See you on Friday!</span></div>
+    </div>
+  </div>
+
+  <div class="card ex" id="ex-listen">
+    <p class="instr">Choose the correct answer.</p>
+    <div class="q" data-ex="listen" data-item="q1" data-correct="a">
+      <p class="qtext"><span class="qn">1</span> What day does Emma invite David out?</p>
+      <div class="opts"><button class="opt" data-val="a">Friday</button><button class="opt" data-val="b">Saturday</button><button class="opt" data-val="c">Sunday</button></div>
+    </div>
+    <div class="q" data-ex="listen" data-item="q2" data-correct="b">
+      <p class="qtext"><span class="qn">2</span> What does Emma invite David to first?</p>
+      <div class="opts"><button class="opt" data-val="a">a concert</button><button class="opt" data-val="b">the cinema</button><button class="opt" data-val="c">a restaurant</button></div>
+    </div>
+    <div class="q" data-ex="listen" data-item="q3" data-correct="c">
+      <p class="qtext"><span class="qn">3</span> Why can’t David have coffee <i>before</i> the film?</p>
+      <div class="opts"><button class="opt" data-val="a">He doesn’t like coffee.</button><button class="opt" data-val="b">He is ill.</button><button class="opt" data-val="c">He finishes work at six.</button></div>
+    </div>
+    <div class="q" data-ex="listen" data-item="q4" data-correct="b">
+      <p class="qtext"><span class="qn">4</span> What time do they meet?</p>
+      <div class="opts"><button class="opt" data-val="a">At six.</button><button class="opt" data-val="b">At seven.</button><button class="opt" data-val="c">At two.</button></div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('listen')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+</section>
+
+<!-- ══════════════ SCREEN 9 — PRONUNCIATION: SENTENCE RHYTHM ══════════════ -->
+<section class="screen" id="s9" data-stage="Pronunciation" data-time="~7 min">
+  <span class="stage">Pronunciation</span><span class="timechip">~7 minutes</span>
+  <h2>Sentence rhythm</h2>
+  <p class="lead">English sentences have a rhythm: some words are <b>strong</b> (long and clear), other words are quick and weak. Listen and copy the rhythm.</p>
+
+  <div class="card">
+    <p class="instr"><span class="num">2a</span>Listen and repeat. <b>Bold</b> words are strong.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 12px">
+      <button class="btn-play" id="p916-play" onclick="fpPlay('p916')">▶ Play 9.16</button>
+      <button class="btn-stop" id="p916-stop" onclick="fpStop('p916')" disabled>■ Stop</button>
+    </div>
+    <p class="note hidden" id="p916-note">⚠️ The audio file <code>assets/audio/9.16.mp3</code> was not found — the British voice below is reading the lines instead.</p>
+    <div class="rhythm" id="rhyLines">
+      <div class="line l1">a <b><i>pizza</i></b>?</div>
+      <div class="line l2"><span class="arrow" aria-hidden="true">↳</span><b>like</b> a <b><i>pizza</i></b>?</div>
+      <div class="line l3"><span class="arrow" aria-hidden="true">↳</span>Would you <b>like</b> a <b><i>pizza</i></b>?</div>
+      <div class="line l1" style="margin-top:14px"><b><i>see</i></b> a <b><i>film</i></b>?</div>
+      <div class="line l2"><span class="arrow" aria-hidden="true">↳</span>to <b><i>see</i></b> a <b><i>film</i></b>?</div>
+      <div class="line l3"><span class="arrow" aria-hidden="true">↳</span>Would you <b>like</b> to <b><i>see</i></b> a <b><i>film</i></b>?</div>
+    </div>
+  </div>
+
+  <div class="card ex" id="ex-rhy">
+    <p class="instr"><span class="num"></span>Listen again (9.16). Choose the correct rhythm: CAPITAL letters = strong words.</p>
+    <div class="q" data-ex="rhy" data-item="q1" data-correct="b">
+      <p class="qtext"><span class="qn">1</span> “Would you like a pizza?”</p>
+      <div class="opts" style="flex-direction:column;align-items:stretch">
+        <button class="opt" data-val="a">WOULD you like a pizza?</button>
+        <button class="opt" data-val="b">Would you LIKE a PIZZA?</button>
+        <button class="opt" data-val="c">would you like a pizza?</button>
+      </div>
+    </div>
+    <div class="q" data-ex="rhy" data-item="q2" data-correct="a">
+      <p class="qtext"><span class="qn">2</span> “Would you like to see a film?”</p>
+      <div class="opts" style="flex-direction:column;align-items:stretch">
+        <button class="opt" data-val="a">Would you LIKE to SEE a FILM?</button>
+        <button class="opt" data-val="b">WOULD you LIKE to see a film?</button>
+        <button class="opt" data-val="c">would you like to see a film?</button>
+      </div>
+    </div>
+    <div class="q" data-ex="rhy" data-item="q3" data-correct="b">
+      <p class="qtext"><span class="qn">3</span> “like a pizza?”</p>
+      <div class="opts">
+        <button class="opt" data-val="a">like a PIZZA?</button>
+        <button class="opt" data-val="b">LIKE a PIZZA?</button>
+        <button class="opt" data-val="c">LIKE a pizza?</button>
+      </div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('rhy')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+
+  <div class="card">
+    <p class="instr"><span class="num">2b</span>Work with your teacher. Use the photos. Ask and answer.</p>
+    <div class="collages">
+      <div class="collage media-slot">
+        <span class="prompt">Would you like a …?</span>
+        <img src="assets/images/pron_bn.png" alt="Four photos: a salad, a coffee, a cola and a sandwich" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="Four photos: a salad, a coffee, a cola and a sandwich"><use href="#ic-cinema"/></svg>
+        <div class="chips">
+          <span class="w" data-v="salad" role="button" tabindex="0">a salad</span>
+          <span class="w" data-v="coffee" role="button" tabindex="0">a coffee</span>
+          <span class="w" data-v="cola" role="button" tabindex="0">a cola</span>
+          <span class="w" data-v="sandwich" role="button" tabindex="0">a sandwich</span>
+        </div>
+      </div>
+      <div class="collage media-slot">
+        <span class="prompt">Would you like to go to a …?</span>
+        <img src="assets/images/pron_bv.png" alt="Four photos: a party, a dinner, a football match and a concert" onerror="mediaFallback(this)">
+        <svg class="fallback" role="img" aria-label="Four photos: a party, a dinner, a football match and a concert"><use href="#ic-concert"/></svg>
+        <div class="chips">
+          <span class="w" data-v="party" role="button" tabindex="0">a party</span>
+          <span class="w" data-v="restaurant" role="button" tabindex="0">a dinner</span>
+          <span class="w" data-v="match" role="button" tabindex="0">a football match</span>
+          <span class="w" data-v="concert" role="button" tabindex="0">a concert</span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:16px;margin:6px 0 0">Ask your teacher <b>three</b> questions with a good rhythm — for example: <i>“Would you like a <span class="w" data-v="coffee" role="button" tabindex="0">coffee</span>?”</i> Then your teacher asks you. Answer with <i>“Yes, please.”</i> / <i>“No, thanks.”</i> / <i>“I’d love to!”</i></p>
+  </div>
+
+  <div class="card">
+    <p class="instr"><span class="num">2c</span>Practise the conversations from Screen 5 (Rob and Alan) with your teacher. Then <b>change roles</b>.</p>
+    <button class="linkbtn" onclick="toggle1b()" id="btn1b">Show the conversations ↓</button>
+    <div class="dlg hidden" id="dlg1b" style="margin-top:10px"></div>
+    <div class="note">💡 Copy the rhythm: <i>“Would you <b>LIKE</b> to <b>COME</b> to the <b>MATCH</b> with me on <b>SUNDAY</b>?”</i></div>
+  </div>
+</section>
+
+<!-- ══════════════ SCREEN 10 — MEETING AN OLD FRIEND + USEFUL PHRASES ══════════════ -->
+<section class="screen" id="s10" data-stage="Video" data-time="~9 min">
+  <span class="stage">Video</span><span class="timechip">~9 minutes</span>
+  <h2>Meeting an old friend</h2>
+  <p class="lead">Jenny meets her ex-boyfriend Steve, a journalist, in the street. Watch and listen.</p>
+
+  <div class="card video-wrap">
+    <video id="fmvideo" class="lesson-video" controls preload="metadata" src="assets/video/friendmeeting.mp4" aria-label="Video: Meeting an old friend">
+      Your browser cannot play this video.
+    </video>
+    <p class="note hidden" id="fmMissing">⚠️ The video file <code>assets/video/friendmeeting.mp4</code> was not found. The teacher can read the script from the Teacher panel instead.</p>
+  </div>
+
+  <div class="card ex" id="ex-ma">
+    <p class="instr"><span class="num">3a</span>Watch the video. What <b>three things</b> does Steve invite Jenny to do? Put the phrases in the correct group. Drag a phrase, or click it and then click a group.</p>
+    <div class="tray" aria-label="Phrases to sort">
+      <button class="sitem" draggable="true" data-ex="ma" data-item="i1" data-val="inv">“Would you like a coffee?”</button>
+      <button class="sitem" draggable="true" data-ex="ma" data-item="i2" data-val="inv">“Would you like to come with me to the exhibition?”</button>
+      <button class="sitem" draggable="true" data-ex="ma" data-item="i3" data-val="inv">“Maybe we can meet one evening and have dinner?”</button>
+      <button class="sitem" draggable="true" data-ex="ma" data-item="i4" data-val="not">“Would you like to come to the match on Sunday?”</button>
+      <button class="sitem" draggable="true" data-ex="ma" data-item="i5" data-val="not">“How about a burger?”</button>
+      <button class="sitem" draggable="true" data-ex="ma" data-item="i6" data-val="not">“I’d like to ask you something.”</button>
+    </div>
+    <div class="zones cols2">
+      <div class="zone" data-zone="inv"><div class="zone-title">✓ Steve invites Jenny</div><div class="zone-items"></div></div>
+      <div class="zone" data-zone="not"><div class="zone-title">✗ Not an invitation in this video</div><div class="zone-items"></div></div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('ma')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+
+  <div class="card ex" id="ex-mb">
+    <p class="instr"><span class="num">3b</span>Watch again. Circle the correct answer.</p>
+    <div class="q" data-ex="mb" data-item="q1" data-correct="a">
+      <p class="qtext"><span class="qn">1</span> Jenny is looking …</p>
+      <div class="opts"><button class="opt" data-val="a">well.</button><button class="opt" data-val="b">tired.</button></div>
+    </div>
+    <div class="q" data-ex="mb" data-item="q2" data-correct="b">
+      <p class="qtext"><span class="qn">2</span> It’s ___ in the street.</p>
+      <div class="opts"><button class="opt" data-val="a">raining</button><button class="opt" data-val="b">starting to rain</button></div>
+    </div>
+    <div class="q" data-ex="mb" data-item="q3" data-correct="b">
+      <p class="qtext"><span class="qn">3</span> Jenny’s meeting is in ___.</p>
+      <div class="opts"><button class="opt" data-val="a">half an hour</button><button class="opt" data-val="b">an hour</button></div>
+    </div>
+    <div class="q" data-ex="mb" data-item="q4" data-correct="b">
+      <p class="qtext"><span class="qn">4</span> Jenny ___ go to the exhibition.</p>
+      <div class="opts"><button class="opt" data-val="a">can</button><button class="opt" data-val="b">can’t</button></div>
+    </div>
+    <div class="q" data-ex="mb" data-item="q5" data-correct="b">
+      <p class="qtext"><span class="qn">5</span> Jenny thinks it ___ a good idea to meet Steve one evening.</p>
+      <div class="opts"><button class="opt" data-val="a">is</button><button class="opt" data-val="b">isn’t</button></div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('mb')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+
+  <div class="card video-wrap">
+    <h3 style="color:var(--teal-d);font-size:18px;margin-bottom:8px">4 · Useful phrases</h3>
+    <video id="upvideo" class="lesson-video" controls preload="metadata" src="assets/video/useful_phrases.mp4" aria-label="Video: Useful phrases — watch and repeat">
+      Your browser cannot play this video.
+    </video>
+    <p class="note hidden" id="upMissing">⚠️ The video file <code>assets/video/useful_phrases.mp4</code> was not found — use the 🔊 buttons to hear each phrase.</p>
+    <p class="instr" style="margin-top:12px">Watch and repeat the useful phrases. Click 🔊 to hear a phrase again; click a phrase to see its card.</p>
+    <div class="row-audio"><button class="btn-audio" onclick="speak('Would you like to come to the match with me on Sunday?')">🔊</button><span class="w" data-v="wouldlike" role="button" tabindex="0">Would you like to come to the match with me on Sunday?</span></div>
+    <div class="row-audio"><button class="btn-audio" onclick="speak('Yeah, I would love to.')">🔊</button><span class="w" data-v="idlove" role="button" tabindex="0">Yeah, I’d love to.</span></div>
+    <div class="row-audio"><button class="btn-audio" onclick="speak('Let’s meet at half past three.')">🔊</button><span class="w" data-v="meetat" role="button" tabindex="0">Let’s meet at half past three.</span></div>
+    <div class="row-audio"><button class="btn-audio" onclick="speak('See you there.')">🔊</button><span class="w" data-v="seeyouthere" role="button" tabindex="0">See you there.</span></div>
+    <div class="row-audio"><button class="btn-audio" onclick="speak('Would you like a burger?')">🔊</button><span>Would you like a burger?</span></div>
+    <div class="row-audio"><button class="btn-audio" onclick="speak('How about a coffee?')">🔊</button><span class="w" data-v="howabout" role="button" tabindex="0">How about a coffee?</span></div>
+    <div class="row-audio"><button class="btn-audio" onclick="speak('I’d like to ask you something.')">🔊</button><span class="w" data-v="idlikeask" role="button" tabindex="0">I’d like to ask you something.</span></div>
+    <div class="row-audio"><button class="btn-audio" onclick="speak('I don’t think it’s a good idea.')">🔊</button><span class="w" data-v="notgoodidea" role="button" tabindex="0">I don’t think it’s a good idea.</span></div>
+  </div>
+
+  <div class="bridge">🎬 Jenny says <b>“I don’t think it’s a good idea”</b> — a polite way to say no to an ex-boyfriend! On the next screen, <b>you</b> invite people to your party.</div>
+</section>
+
+<!-- ══════════════ SCREEN 11 — SPEAKING & WRITING AN EMAIL ══════════════ -->
+<section class="screen" id="s11" data-stage="Speaking" data-time="~8 min">
+  <span class="stage">Speaking</span><span class="timechip">~8 minutes</span>
+  <h2>Your party & an email</h2>
+  <p class="lead">Now use the phrases in real conversations. There is no right or wrong answer here — speak with your teacher.</p>
+
+  <div class="card">
+    <p class="instr"><span class="num">5a</span>Listen and repeat the conversations. Then practise them with your teacher.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 12px">
+      <button class="btn-play" id="p917-play" onclick="fpPlay('p917')">▶ Play 9.17</button>
+      <button class="btn-stop" id="p917-stop" onclick="fpStop('p917')" disabled>■ Stop</button>
+    </div>
+    <p class="note hidden" id="p917-note">⚠️ The audio file <code>assets/audio/9.17.mp3</code> was not found — the British voice below is reading the conversations instead.</p>
+    <div class="dlg" id="conv917">
+      <div class="line"><span class="spk">A:</span><span>Would you like to come to a party at my house?</span></div>
+      <div class="line"><span class="spk">B:</span><span>Yes, <span class="w" data-v="idlove" role="button" tabindex="0">I’d love to</span>. Thanks! When is it?</span></div>
+      <div class="line"><span class="spk">A:</span><span>It’s on Friday at 8.00.</span></div>
+      <div class="line"><span class="spk">B:</span><span>Great! <span class="w" data-v="seeyouthere" role="button" tabindex="0">See you there</span>.</span></div>
+      <div class="line" style="margin-top:14px"><span class="spk">A:</span><span>Would you like to come to a party on Saturday?</span></div>
+      <div class="line"><span class="spk">B:</span><span>Sorry, I can’t. I’m <span class="w" data-v="busy" role="button" tabindex="0">busy</span> on Saturday night.</span></div>
+    </div>
+  </div>
+
+  <div class="role">
+    <h3 style="font-size:17px">5b · Imagine it’s your party 🎈</h3>
+    <p>Choose a <b>day</b> and a <b>time</b>. Invite your teacher. Can he or she come?</p>
+    <ul class="checklist">
+      <li>say the day and the time clearly;</li>
+      <li>use <b>“Would you like to come to …?”</b>;</li>
+      <li>listen to the answer and react (<i>Great! See you there!</i> / <i>Oh, what a pity!</i>).</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <p class="instr"><span class="num">5c</span>Now imagine three more guests (friends or family). Invite them aloud. Then tell your teacher: <b>how many people can come?</b></p>
+    <p style="margin:6px 0 0;font-size:16px">Example: <i>“I invite Maria, Denis and Olga. Maria can come, Denis can’t, Olga can. Two people can come.”</i></p>
+  </div>
+
+  <div class="useful">
+    <h4>Speaking support</h4>
+    <ul>
+      <li>Would you like to come to a party at my house?</li>
+      <li>It’s on Friday at 8.00. / Let’s meet at half past three.</li>
+      <li>Yes, I’d love to. Thanks! / Great! See you there.</li>
+      <li>Sorry, I can’t. I’m busy on Saturday night.</li>
+    </ul>
+  </div>
+
+  <div class="bridge">✉️ For homework, you will write <b>an email to invite someone</b> (coursebook 5d) — press the big flashing HOMEWORK button on the next screen!</div>
+</section>
+
+<!-- ══════════════ SCREEN 12 — REVIEW ══════════════ -->
+<section class="screen" id="s12" data-stage="Review" data-time="~5 min">
+  <span class="stage">Review</span><span class="timechip">~5 minutes</span>
+  <h2>What can you say now?</h2>
+  <p class="lead">A quick check of today’s language.</p>
+
+  <div class="card ex" id="ex-review">
+    <div class="q" data-ex="review" data-item="q1" data-correct="b">
+      <p class="qtext"><span class="qn">1</span> Which sentence is correct?</p>
+      <div class="opts" style="flex-direction:column;align-items:stretch">
+        <button class="opt" data-val="a">Would you like come to the party?</button>
+        <button class="opt" data-val="b">Would you like to come to the party?</button>
+        <button class="opt" data-val="c">You would like to come the party?</button>
+      </div>
+    </div>
+    <div class="q" data-ex="review" data-item="q2" data-correct="a">
+      <p class="qtext"><span class="qn">2</span> Would you like ___ coffee?</p>
+      <div class="opts"><button class="opt" data-val="a">a</button><button class="opt" data-val="b">any</button><button class="opt" data-val="c">the</button></div>
+    </div>
+    <div class="q" data-ex="review" data-item="q3" data-correct="b">
+      <p class="qtext"><span class="qn">3</span> A: “Would you like to come to the cinema?” &nbsp;The best answer is:</p>
+      <div class="opts"><button class="opt" data-val="a">Yes, I do.</button><button class="opt" data-val="b">I’d love to!</button><button class="opt" data-val="c">No, I’m not.</button></div>
+    </div>
+    <div class="q" data-ex="review" data-item="q4" data-correct="b">
+      <p class="qtext"><span class="qn">4</span> How do you decline <i>politely</i>?</p>
+      <div class="opts" style="flex-direction:column;align-items:stretch">
+        <button class="opt" data-val="a">No way.</button>
+        <button class="opt" data-val="b">I’d love to, but I’m busy. Sorry!</button>
+        <button class="opt" data-val="c">I don’t want.</button>
+      </div>
+    </div>
+    <div class="q" data-ex="review" data-item="q5" data-correct="b">
+      <p class="qtext"><span class="qn">5</span> Which rhythm is correct for “Would you like a pizza?”?</p>
+      <div class="opts" style="flex-direction:column;align-items:stretch">
+        <button class="opt" data-val="a">WOULD you like a pizza?</button>
+        <button class="opt" data-val="b">Would you LIKE a PIZZA?</button>
+        <button class="opt" data-val="c">would you like a pizza?</button>
+      </div>
+    </div>
+    <div class="exbar"><button class="btn-reset" onclick="resetEx('review')">↺ Reset</button><span class="result" role="status" aria-live="polite" hidden></span></div>
+  </div>
+
+  <div class="card">
+    <h3 style="color:var(--teal-d);font-size:17px">Think and say 🗣️</h3>
+    <ul class="qlist" style="margin:8px 0">
+      <li>Which new phrases can you remember? Say three aloud.</li>
+      <li>Who would you like to invite somewhere this week? Where would you like to go?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════ SCREEN 13 — HOMEWORK (flashing CTA, v1.5) ══════════════ -->
+<section class="screen" id="s13" data-stage="Homework" data-time="~2 min in class">
+  <span class="stage">Homework</span><span class="timechip">40–60 minutes after class</span>
+  <h2>Your homework 📝</h2>
+  <p class="lead">Do this after the lesson. Bring it to your next class. The full homework is also saved as a separate page — press the flashing button below to open it.</p>
+
+  <a class="hw-cta" href="homework.html" aria-label="Open the homework page: homework.html">
+    <span class="hw-ico" aria-hidden="true">📝</span>
+    <span class="hw-txt">HOMEWORK — open the homework page<small>separate file: homework.html · do it after class</small></span>
+  </a>
+
+  <div class="hw-task">
+    <h3><span class="hw-num">1</span>Complete the sentences (controlled task, ~15 minutes)</h3>
+    <p>Use the words from the box. Write the full sentences in your notebook.</p>
+    <div class="tray" style="cursor:default" aria-label="Word box">
+      <span class="sitem" style="cursor:default">like</span><span class="sitem" style="cursor:default">Would</span><span class="sitem" style="cursor:default">to</span><span class="sitem" style="cursor:default">please</span><span class="sitem" style="cursor:default">sounds</span><span class="sitem" style="cursor:default">time</span>
+    </div>
+    <ol class="qlist">
+      <li>Would you ___ a cup of tea?</li>
+      <li>___ you like to come to the exhibition on Sunday?</li>
+      <li>I’d love ___, but I’m busy on Friday.</li>
+      <li>A: Would you like some help? B: Yes, ___!</li>
+      <li>That ___ great! Let’s go to the cinema.</li>
+      <li>I can’t come today. Maybe another ___.</li>
+    </ol>
+    <button class="linkbtn" onclick="toggleHwAnswers()" id="btnHw">Check answers ↓</button>
+    <div class="answers hidden" id="hwAnswers"><b>Answers:</b> 1 like · 2 Would · 3 to · 4 please · 5 sounds · 6 time</div>
+  </div>
+
+  <div class="hw-task">
+    <h3><span class="hw-num">2</span>Write an email invitation (coursebook 5d · productive task, ~20 minutes)</h3>
+    <p>Write an <span class="w" data-v="email" role="button" tabindex="0">email</span> (40–60 words) to a friend. Invite your friend to do something: a party, the cinema, a concert, a restaurant, a football match. Say the <b>day</b> and the <b>time</b>.</p>
+    <div class="useful" style="margin-top:10px">
+      <h4>Useful structure</h4>
+      <ul>
+        <li>Hi …, / Dear …,</li>
+        <li>Would you like to …? / How about …?</li>
+        <li>It’s on … at …. / Let’s meet at ….</li>
+        <li>Let me know! / See you there! / Best wishes, …</li>
+      </ul>
+    </div>
+    <p style="margin:8px 0 4px"><b>Checklist:</b></p>
+    <ul class="checklist">
+      <li>use <b>“Would you like…?”</b> at least twice;</li>
+      <li>use at least one phrase from <b>Useful phrases</b> (Screen 10);</li>
+      <li>include a day and a time;</li>
+      <li>check spelling and punctuation.</li>
+    </ul>
+  </div>
+
+  <div class="hw-task">
+    <h3><span class="hw-num">3</span>Speak and record (optional, ~5 minutes)</h3>
+    <p>Record a 60-second voice message: read conversation 1 or 2 from Screen 11 (5a) with a good rhythm, then invite your teacher to something you really enjoy and suggest a day and time.</p>
+  </div>
+
+  <a class="hw-cta" href="homework.html" aria-label="Open the homework page: homework.html">
+    <span class="hw-ico" aria-hidden="true">📝</span>
+    <span class="hw-txt">Don’t forget! Open your HOMEWORK now<small>homework.html · send it to your teacher before the next lesson</small></span>
+  </a>
+
+  <div class="finish">🎉 Well done! In this lesson you learned how to invite people and answer invitations with <b>would you like</b>, and how to speak with a natural English rhythm. Your homework is on the flashing <b>HOMEWORK</b> button above (homework.html). See you in the next lesson — <b>10A · A room with a view</b>!</div>
+</section>
+
+</main>
+
+<!-- ═══════════ NAVIGATION ═══════════ -->
+<nav class="bottom" aria-label="Lesson navigation">
+  <div class="nav-in">
+    <button class="btn-nav btn-back" id="btnBack" onclick="go(-1)">← Back</button>
+    <span class="counter" id="counter" aria-live="polite">Screen 1 of 13</span>
+    <button class="btn-nav btn-next" id="btnNext" onclick="go(1)">Next →</button>
+  </div>
+</nav>
+
+<!-- ═══════════ VOCABULARY MODAL ═══════════ -->
+<div class="overlay hidden" id="vmodal" role="dialog" aria-modal="true" aria-labelledby="vmTitle" onclick="if(event.target===this)closeModal()">
+  <div class="sheet" id="vsheet"></div>
+</div>
+
+<!-- ═══════════ TEACHER PANEL ═══════════ -->
+<div class="overlay hidden" id="tmodal" role="dialog" aria-modal="true" aria-labelledby="tmTitle" onclick="if(event.target===this)closeTeacher()">
+  <div class="sheet teacher-sheet">
+    <button class="close" onclick="closeTeacher()" aria-label="Close teacher panel">✕</button>
+    <h2 id="tmTitle" style="color:var(--teal-d)">Teacher notes & answer key</h2>
+    <p style="color:var(--muted);font-size:14px">Practical English 5 — Would you like to come? · 90 min · individual · A1–A2 · <b>Lesson file v1.5</b></p>
+
+    <h3>Change log</h3>
+    <ul>
+      <li><b>v1.5</b> — Last screen (13): large flashing HOMEWORK call-to-action linking to <code>homework.html</code> (same folder level), placed at the top and bottom of the screen; pulse animation disabled under prefers-reduced-motion; finish box and Screen 11 bridge now point to the button.</li>
+      <li><b>v1.4</b> — Screen 9 rebuilt (sentence rhythm, 9.16, pron_bn/pron_bv, stress check, 2c); new Screen 10 (friendmeeting.mp4, useful_phrases.mp4, 3a/3b with script-verified key); Screen 11 = coursebook 5 speaking; 5d email → homework.</li>
+      <li><b>v1.3</b> — Six event images integrated (Screens 3, 4, 5 strip, 8).</li>
+      <li><b>v1.2</b> — Media paths: invite.png; inviting.mp4; a/b/c.png.</li>
+      <li><b>v1.1</b> — Coursebook video exercises 1a/1b/1c; 12 screens.</li>
+      <li><b>v1.0</b> — Initial build.</li>
+    </ul>
+
+    <h3>Media files used</h3>
+    <table>
+      <tr><th>Screen</th><th>Path</th><th>Fallback if missing</th></tr>
+      <tr><td>1, 3, 4, 5, 8</td><td>invite.png; six event PNGs; inviting.mp4; a/b/c.png</td><td>SVG placeholders / TTS script</td></tr>
+      <tr><td>9</td><td>assets/audio/9.16.mp3; assets/images/pron_bn.png; assets/images/pron_bv.png</td><td>TTS reads rhythm lines; SVG note for collages</td></tr>
+      <tr><td>10</td><td>assets/video/friendmeeting.mp4; assets/video/useful_phrases.mp4</td><td>script in this panel; per-phrase TTS</td></tr>
+      <tr><td>11</td><td>assets/audio/9.17.mp3</td><td>TTS reads both conversations with line highlight</td></tr>
+      <tr><td>13</td><td>link: homework.html (same directory)</td><td>tasks also printed on-screen if the file is absent</td></tr>
+    </table>
+
+    <h3>Timing (total ≈ 90 min)</h3>
+    <table>
+      <tr><th>Screen</th><th>Stage</th><th>Time</th></tr>
+      <tr><td>1</td><td>Intro + reference</td><td>3 min</td></tr>
+      <tr><td>2</td><td>Revision 9B</td><td>7 min</td></tr>
+      <tr><td>3</td><td>Warm-up</td><td>5 min</td></tr>
+      <tr><td>4</td><td>Vocabulary lead-in</td><td>8 min</td></tr>
+      <tr><td>5</td><td>Video: Inviting and offering (1a–1c)</td><td>12 min</td></tr>
+      <tr><td>6</td><td>Language focus</td><td>8 min</td></tr>
+      <tr><td>7</td><td>Controlled practice</td><td>9 min</td></tr>
+      <tr><td>8</td><td>Listening: Emma invites David</td><td>6 min</td></tr>
+      <tr><td>9</td><td>Pronunciation: sentence rhythm (2a–2c)</td><td>7 min</td></tr>
+      <tr><td>10</td><td>Video: Meeting an old friend + Useful phrases (3–4)</td><td>9 min</td></tr>
+      <tr><td>11</td><td>Speaking & Writing an email (5a–5c)</td><td>8 min</td></tr>
+      <tr><td>12</td><td>Review</td><td>5 min</td></tr>
+      <tr><td>13</td><td>Homework setup + flashing HOMEWORK button</td><td>2 min (40–60 min after class)</td></tr>
+    </table>
+
+    <h3>Answer key</h3>
+    <table>
+      <tr><th>Exercise</th><th>Answers</th></tr>
+      <tr><td>Screen 2 · Rev 1 / Rev 2</td><td>jacket/scarf/trainers/gloves as defined · 1 is wearing · 2 wears · 3 are playing · 4 have</td></tr>
+      <tr><td>Screen 4 · Act 1 / Act 2</td><td>six event pictures · Yes: Yes, please! / I’d love to. / That sounds great! — No: I’d love to, but I’m busy. / Sorry, I can’t. / Maybe another time.</td></tr>
+      <tr><td>Screen 5 · 1a / 1b</td><td>A-2, B-1, C-3 · 1 match 2 Sunday 3 4.00 4 lunch 5 birthday 6 3.30 · 7 know 8 burger 9 hungry 10 coffee 11 water 12 Milk</td></tr>
+      <tr><td>Screen 7 · Tasks 1–2</td><td>1 Would 2 to come 3 I’d love to 4 something 5 but · 1 Would you like 2 I’d love to 3 Maybe another time 4 That sounds great</td></tr>
+      <tr><td>Screen 8 · Listening</td><td>1 Friday · 2 the cinema · 3 He finishes work at six · 4 At seven</td></tr>
+      <tr><td>Screen 9 · rhythm check</td><td>1 b · 2 a · 3 b</td></tr>
+      <tr><td>Screen 10 · 3a sort</td><td>Invitations: a coffee · the exhibition · meet one evening (dinner/show). Not: match on Sunday · a burger · “I’d like to ask you something.”</td></tr>
+      <tr><td>Screen 10 · 3b</td><td>1 well · 2 starting to rain · 3 an hour · 4 can’t · 5 isn’t (verified from published video script)</td></tr>
+      <tr><td>Screen 12 · Review</td><td>1 b · 2 a · 3 b · 4 b · 5 b</td></tr>
+      <tr><td>Screen 13 · HW 1</td><td>1 like · 2 Would · 3 to · 4 please · 5 sounds · 6 time</td></tr>
+    </table>
+
+    <h3>Video script — “Meeting an old friend”</h3>
+    <p style="font-size:14.5px"><b>Steve:</b> Hi, Jenny. What a surprise! — <b>Jenny:</b> Hi, Steve! — <b>Steve:</b> How are you? You’re looking great. — <b>Jenny:</b> Thanks. I’m well. How about you? — <b>Steve:</b> I’m OK. Hey, it’s starting to rain. Would you like a coffee? — <b>Jenny:</b> Oh, thanks, Steve, but I have a meeting in an hour. — <b>Steve:</b> Oh, come on, Jenny. I’d like to talk to you. — <b>Jenny:</b> OK. A quick coffee. — <b>Steve:</b> Jenny, I’d like to ask you something. — <b>Jenny:</b> Yes? — <b>Steve:</b> There’s an exhibition of Picasso at the MOMA next week. I know you love Picasso. Would you like to come with me? — <b>Jenny:</b> Listen, Steve. I’m really busy at work at the moment. Next week isn’t a good week for me. — <b>Steve:</b> Sure. No problem. Maybe we can meet one evening, when you have more time and… have dinner or see a show? — <b>Jenny:</b> Listen, Steve. I don’t think it’s a good idea. But thanks. Oh, look at the time! I need to go. Let’s ask for the check.</p>
+
+    <h3>Anticipated difficulties & correction points</h3>
+    <ul>
+      <li>Rhythm: students give every word equal weight — drill the 9.16 build-up line by line; clap or tap the strong words.</li>
+      <li>“Would you like come…” (dropping <b>to</b>) — correct immediately; recycle in Screen 12 review.</li>
+      <li>“I’d like” vs “Would you like” — request vs invitation; use Screen 10 phrases as examples.</li>
+      <li>Declining politely: “I don’t think it’s a good idea” — discuss tone (firm but friendly).</li>
+      <li>Times: “half past three”, “8.00” — check pronunciation /hɑːf pɑːst/.</li>
+    </ul>
+
+    <h3>Live-class notes</h3>
+    <ul>
+      <li><b>Homework button (v1.5):</b> at the end of the lesson, open Screen 13 together and press the flashing HOMEWORK button once with the student so you both see <code>homework.html</code> open; the same tasks are printed on-screen as backup if the file is missing.</li>
+      <li>Screen 9: play 9.16 once for listening, once for repeating; 2b is teacher–student ping-pong; 2c — swap roles after one full run.</li>
+      <li>Screen 10: play friendmeeting.mp4 once for 3a, again for 3b; useful phrases — choral then individual repetition.</li>
+      <li>Screen 11: in 5b accept once and decline once across runs; 5c is a short fluency count.</li>
+      <li>All exercise state survives screen switching; Reset restores each activity.</li>
+      <li>Group adaptation: 2b and 5b–5c become pair/chain invitations; count total acceptances across the group.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+/* ═══════════ MEDIA FALLBACK ═══════════ */
+function mediaFallback(img){
+  const slot=img.closest('.media-slot');
+  if(slot)slot.classList.add('img-off');
+  else img.style.display='none';
+}
+
+/* ═══════════ VOCABULARY DATA ═══════════ */
+const VOCAB={
+ invite:{w:"invite",ipa:"/ɪnˈvaɪt/",pos:"verb",def:"to ask someone to come to an event",ex:["I want to invite my friends to dinner.","Thank you for inviting me!"],ru:"приглашать"},
+ invitation:{w:"invitation",ipa:"/ˌɪnvɪˈteɪʃn/",pos:"noun",def:"a message that asks you to come to an event",ex:["Did you get the invitation to the party?"],ru:"приглашение"},
+ wouldlike:{w:"Would you like…?",ipa:"/wʊd ju ˈlaɪk/",pos:"phrase",def:"a polite way to invite someone or offer something",ex:["Would you like a cup of tea?","Would you like to come to my party?"],ru:"Не хотели бы вы…? / Хотите…? (вежливо)"},
+ idlike:{w:"I’d like…",ipa:"/aɪd ˈlaɪk/",pos:"phrase",def:"a polite way to say what you want",ex:["I’d like a coffee, please.","And I’d like a burger."],ru:"Я бы хотел(а)…"},
+ idlove:{w:"I’d love to.",ipa:"/aɪd ˈlʌv tuː/",pos:"phrase",def:"a warm way to say “yes” to an invitation",ex:["“Would you like to come?” — “I’d love to!”"],ru:"С удовольствием!"},
+ great:{w:"That sounds great.",ipa:"/ðæt saʊndz ɡreɪt/",pos:"phrase",def:"say this when you like an idea",ex:["“Let’s meet at seven.” — “That sounds great!”"],ru:"Звучит здорово!"},
+ busy:{w:"busy",ipa:"/ˈbɪzi/",pos:"adjective",def:"having no free time",ex:["I can’t come today — I’m very busy."],ru:"занят(а)"},
+ anothertime:{w:"Maybe another time.",ipa:"/ˈmeɪbi ənʌðə taɪm/",pos:"phrase",def:"a polite way to say “no now, but yes later”",ex:["Sorry, I can’t on Friday. Maybe another time."],ru:"Может быть, в другой раз."},
+ howabout:{w:"How about a coffee?",ipa:"/haʊ əˈbaʊt/",pos:"phrase",def:"another friendly way to offer something",ex:["How about a coffee after the film?"],ru:"Как насчёт кофе?"},
+ meetat:{w:"Let’s meet at half past three.",ipa:"/lets miːt æt hɑːf pɑːst θriː/",pos:"phrase",def:"say this to agree on a time",ex:["Let’s meet at half past three at the entrance."],ru:"Давай встретимся в половине четвёртого."},
+ seeyouthere:{w:"See you there.",ipa:"/siː ju ðeə(r)/",pos:"phrase",def:"say this when you agree to meet at a place",ex:["It’s on Friday at 8.00. — Great! See you there."],ru:"Увидимся там."},
+ idlikeask:{w:"I’d like to ask you something.",ipa:"/aɪd laɪk tu ɑːsk ju ˈsʌmθŋ/",pos:"phrase",def:"say this before you ask a personal or important question",ex:["Jenny, I’d like to ask you something."],ru:"Я хотел(а) бы тебя о чём-то спросить."},
+ notgoodidea:{w:"I don’t think it’s a good idea.",ipa:"/aɪ dəʊt θɪŋk ts ə ɡʊd aɪˈdɪə/",pos:"phrase",def:"a polite way to say no to a plan",ex:["Maybe we can meet one evening? — I don’t think it’s a good idea."],ru:"Не думаю, что это хорошая идея."},
+ concert:{w:"concert",ipa:"/ˈkɒnsət/",pos:"noun",def:"a live music show",ex:["They are going to a rock concert on Saturday."],ru:"концерт",img:"ic-concert"},
+ cinema:{w:"the cinema",ipa:"/ˈsɪnəmə/",pos:"noun",def:"a place where you watch films",ex:["We watch a film at the cinema every Friday."],ru:"кинотеатр, кино",img:"ic-cinema"},
+ party:{w:"party",ipa:"/ˈpɑːti/",pos:"noun",def:"a social event where people meet, eat, drink and have fun",ex:["My friends are at Anna’s party."],ru:"вечеринка"},
+ birthday:{w:"birthday",ipa:"/ˈbɜθdeɪ/",pos:"noun",def:"the day you were born; you celebrate it every year",ex:["It’s my mum’s birthday on Sunday."],ru:"день рождения",img:"ic-party"},
+ match:{w:"football match",ipa:"/ˈfʊtbɔːl mætʃ/",pos:"noun",def:"a game of football between two teams",ex:["Would you like to watch a football match with us?"],ru:"футбольный матч",img:"ic-football"},
+ wedding:{w:"wedding",ipa:"/ˈwedɪŋ/",pos:"noun",def:"the ceremony when two people get married",ex:["Their wedding is in June. Everyone is invited!"],ru:"свадьба",img:"ic-wedding"},
+ restaurant:{w:"restaurant",ipa:"/ˈrestrɒnt/",pos:"noun",def:"a place where you buy and eat a meal",ex:["Let’s have dinner at an Italian restaurant."],ru:"ресторан",img:"ic-restaurant"},
+ pizza:{w:"pizza",ipa:"/ˈpiːtsə/",pos:"noun",def:"a flat round bread with cheese and tomato on top",ex:["Would you like a pizza?"],ru:"пицца"},
+ salad:{w:"salad",ipa:"/ˈsæləd/",pos:"noun",def:"a cold dish of vegetables",ex:["Would you like a salad with your lunch?"],ru:"салат"},
+ sandwich:{w:"sandwich",ipa:"/ˈsænwɪtʃ/",pos:"noun",def:"two pieces of bread with food between them",ex:["A cheese sandwich, please."],ru:"сэндвич, бутерброд"},
+ cola:{w:"cola",ipa:"/ˈkəʊlə/",pos:"noun",def:"a cold, dark, sweet drink",ex:["Would you like a cola with ice?"],ru:"кола"},
+ coffee:{w:"coffee",ipa:"/ˈkɒfi/",pos:"noun",def:"a hot dark drink made from beans",ex:["Would you like a coffee?"],ru:"кофе"},
+ cup:{w:"cup",ipa:"/kʌp/",pos:"noun",def:"a round container for tea or coffee",ex:["Would you like a cup of coffee?"],ru:"чашка"},
+ exhibition:{w:"exhibition",ipa:"/ˌeksɪˈbɪʃn/",pos:"noun",def:"a show of art or interesting objects",ex:["There’s a new art exhibition in town."],ru:"выставка"},
+ film:{w:"film",ipa:"/fɪlm/",pos:"noun",def:"a story you watch on a screen; a movie",ex:["Would you like to watch a film tonight?"],ru:"фильм"},
+ entrance:{w:"the entrance",ipa:"/ˈentrəns/",pos:"noun",def:"the door where you go into a place",ex:["Let’s meet at the entrance to the Tube station."],ru:"вход"},
+ tube:{w:"the Tube",ipa:"/tjuːb/",pos:"noun",def:"the underground train in London",ex:["We go to the match by Tube."],ru:"лондонское метро («тьюб»)"},
+ email:{w:"email",ipa:"/ˈiːmeɪl/",pos:"noun",def:"a message you write and send on a computer or phone",ex:["Write an email to invite your friend."],ru:"электронное письмо"},
+ jacket:{w:"jacket",ipa:"/ˈdʒækɪt/",pos:"noun",def:"a short coat you wear over other clothes",ex:["He is wearing a black jacket."],ru:"куртка; пиджак"},
+ scarf:{w:"scarf",ipa:"/skɑːf/",pos:"noun",def:"a piece of cloth you wear round your neck",ex:["This red scarf is very warm."],ru:"шарф"},
+ trainers:{w:"trainers",ipa:"/ˈtreɪnəz/",pos:"noun (plural)",def:"comfortable shoes you wear for sport",ex:["She wears trainers to the gym."],ru:"кроссовки"},
+ gloves:{w:"gloves",ipa:"/ɡlʌvz/",pos:"noun (plural)",def:"clothes you wear on your hands in cold weather",ex:["Don’t forget your gloves — it’s cold!"],ru:"перчатки"},
+ wear:{w:"wear",ipa:"/weə(r)/",pos:"verb",def:"to have clothes on your body",ex:["She is wearing a blue dress today.","Tom usually wears jeans to work."],ru:"носить (одежду), быть одетым"}
+};
+const VOCAB_MAIN=["wouldlike","idlike","idlove","great","busy","anothertime","invite","invitation"];
+const VOCAB_EXTRA=["howabout","meetat","seeyouthere","idlikeask","notgoodidea","concert","cinema","party","birthday","match","wedding","restaurant","pizza","salad","sandwich","cola","coffee","cup","exhibition","film","entrance","tube","email"];
+
+function buildVocabLists(){
+  const l1=document.getElementById('vocabList'), l2=document.getElementById('vocabExtra');
+  VOCAB_MAIN.forEach(id=>l1.appendChild(makeVChip(id)));
+  VOCAB_EXTRA.forEach(id=>l2.appendChild(makeVChip(id)));
+}
+function makeVChip(id){
+  const v=VOCAB[id];
+  const b=document.createElement('button');
+  b.className='vchip'; b.type='button';
+  b.innerHTML=esc(v.w)+' <span class="pos">'+esc(v.pos||'')+'</span>';
+  b.setAttribute('aria-label','Open vocabulary card: '+v.w);
+  b.addEventListener('click',()=>openCard(id));
+  return b;
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+/* ═══════════ REFERENCE PANELS ═══════════ */
+function toggleRef(which){
+  const cv=document.getElementById('card-vocab'), cg=document.getElementById('card-grammar');
+  const pv=document.getElementById('ref-vocab'), pg=document.getElementById('ref-grammar');
+  if(which==='vocab'){cv.classList.add('on');cv.setAttribute('aria-selected','true');cg.classList.remove('on');cg.setAttribute('aria-selected','false');pv.classList.add('open');pg.classList.remove('open');}
+  else{cg.classList.add('on');cg.setAttribute('aria-selected','true');cv.classList.remove('on');cv.setAttribute('aria-selected','false');pg.classList.add('open');pv.classList.remove('open');}
+}
+let vocabExpanded=false;
+function toggleMoreVocab(){
+  vocabExpanded=!vocabExpanded;
+  document.getElementById('vocabExtra').classList.toggle('hidden',!vocabExpanded);
+  document.getElementById('btnMoreVocab').textContent=vocabExpanded?'Show less ↑':'Show full list ↓';
+}
+
+/* ═══════════ AUDIO (Web Speech, en-GB) ═══════════ */
+let voices=[];
+function loadVoices(){try{voices=speechSynthesis.getVoices()||[]}catch(e){voices=[]}}
+if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
+function gbVoice(){return voices.find(v=>v.lang==='en-GB')||voices.find(v=>v.lang&&v.lang.toLowerCase().startsWith('en'))||null}
+function speak(text){
+  if(!('speechSynthesis' in window)){showTtsNote();return}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-GB'; const v=gbVoice(); if(v)u.voice=v; u.rate=.9;
+  speechSynthesis.speak(u);
+}
+function showTtsNote(){const n=document.getElementById('ttsNote');if(n)n.hidden=false;}
+
+/* ═══════════ FILE AUDIO PLAYERS (9.16 / 9.17) with TTS fallback ═══════════ */
+const FP={};
+function fpCfg(id,src,lines,hl,noteId){FP[id]={src:src,lines:lines,hl:hl,note:noteId,a:null,failed:false,playing:false,stop:false};}
+fpCfg('p916','assets/audio/9.16.mp3',[
+ {t:'a pizza?'},{t:'like a pizza?'},{t:'Would you like a pizza?'},
+ {t:'see a film?'},{t:'to see a film?'},{t:'Would you like to see a film?'}],'#rhyLines','p916-note');
+fpCfg('p917','assets/audio/9.17.mp3',[
+ {t:'Would you like to come to a party at my house?'},
+ {t:'Yes, I’d love to. Thanks! When is it?'},
+ {t:'It’s on Friday at 8.00.'},
+ {t:'Great! See you there.'},
+ {t:'Would you like to come to a party on Saturday?'},
+ {t:'Sorry, I can’t. I’m busy on Saturday night.'}],'#conv917','p917-note');
+
+function fpUI(id){
+  const c=FP[id];
+  const p=document.getElementById(id+'-play'), s=document.getElementById(id+'-stop');
+  if(p)p.disabled=c.playing;
+  if(s)s.disabled=!c.playing;
+}
+function fpPlay(id){
+  const c=FP[id]; if(!c||c.playing)return;
+  if(c.failed){fpTts(id);return}
+  if(!c.a){
+    c.a=new Audio(c.src);
+    c.a.addEventListener('ended',()=>{c.playing=false;fpUI(id);});
+    c.a.addEventListener('error',()=>{c.failed=true;c.playing=false;fpUI(id);fpShowNote(id);fpTts(id);});
+  }
+  const pr=c.a.play();
+  c.playing=true;c.stop=false;fpUI(id);
+  if(pr&&pr.catch)pr.catch(()=>{c.failed=true;c.playing=false;fpUI(id);fpShowNote(id);fpTts(id);});
+}
+function fpStop(id){
+  const c=FP[id]; if(!c)return;
+  if(c.a){c.a.pause();c.a.currentTime=0;}
+  c.stop=true;
+  if('speechSynthesis' in window)speechSynthesis.cancel();
+  c.playing=false;fpClearHl(id);fpUI(id);
+}
+function fpShowNote(id){const c=FP[id];const n=c.note?document.getElementById(c.note):null;if(n)n.hidden=false;}
+function fpTts(id){
+  const c=FP[id];
+  if(!('speechSynthesis' in window)){showTtsNote();return}
+  c.playing=true;c.stop=false;fpUI(id);fpSay(id,0);
+}
+function fpSay(id,i){
+  const c=FP[id];
+  if(c.stop||i>=c.lines.length){c.playing=false;c.stop=false;fpClearHl(id);fpUI(id);return}
+  fpClearHl(id);
+  if(c.hl){const els=document.querySelectorAll(c.hl+' .line');if(els[i])els[i].classList.add('speaking');}
+  const u=new SpeechSynthesisUtterance(c.lines[i].t);
+  u.lang='en-GB'; const v=gbVoice(); if(v)u.voice=v; u.rate=.92;
+  u.onend=()=>setTimeout(()=>fpSay(id,i+1),240);
+  u.onerror=()=>{c.playing=false;fpClearHl(id);fpUI(id);};
+  speechSynthesis.speak(u);
+}
+function fpClearHl(id){const c=FP[id];if(c.hl){document.querySelectorAll(c.hl+' .speaking').forEach(e=>e.classList.remove('speaking'));}}
+
+/* ═══════════ GENERATED DIALOGUE PLAYER (Screen 8) ═══════════ */
+const DLG=[
+ {t:'Hi David! What are you doing on Friday evening?'},
+ {t:'Nothing special. Why?'},
+ {t:'Would you like to come to the cinema? There’s a new film on.'},
+ {t:'That sounds great! What time does it start?'},
+ {t:'At seven. Would you like a coffee before the film?'},
+ {t:'I’d love to, but I finish work at six. Maybe a coffee after the film?'},
+ {t:'Good idea! See you at the cinema at seven.'},
+ {t:'Perfect. See you on Friday!'}
+];
+let dlgPlaying=false, dlgStop=false;
+function playDialogue(){
+  if(!('speechSynthesis' in window)){showTtsNote();toggleTranscript(true);return}
+  if(dlgPlaying)return;
+  dlgPlaying=true;dlgStop=false;updateDlgBtns();
+  const tr=document.getElementById('transcript'); if(tr.classList.contains('hidden'))toggleTranscript();
+  speakLine(0);
+}
+function speakLine(i){
+  if(dlgStop||i>=DLG.length){dlgPlaying=false;dlgStop=false;clearHl();updateDlgBtns();return}
+  clearHl();
+  const el=document.querySelector('#transcript .line[data-l="'+i+'"]'); if(el)el.classList.add('speaking');
+  const u=new SpeechSynthesisUtterance(DLG[i].t);
+  u.lang='en-GB'; const v=gbVoice(); if(v)u.voice=v; u.rate=.92;
+  u.onend=()=>setTimeout(()=>speakLine(i+1),260);
+  u.onerror=()=>{dlgPlaying=false;dlgStop=true;clearHl();updateDlgBtns();};
+  speechSynthesis.speak(u);
+}
+function clearHl(){document.querySelectorAll('#transcript .speaking').forEach(e=>e.classList.remove('speaking'))}
+function stopDialogue(){dlgStop=true;speechSynthesis.cancel();dlgPlaying=false;clearHl();updateDlgBtns();}
+function updateDlgBtns(){document.getElementById('btnPlayDlg').disabled=dlgPlaying;document.getElementById('btnStopDlg').disabled=!dlgPlaying;}
+function toggleTranscript(force){
+  const tr=document.getElementById('transcript'), b=document.getElementById('btnTranscript');
+  const show=force===true?true:(force===false?false:tr.classList.contains('hidden'));
+  tr.classList.toggle('hidden',!show);
+  b.textContent=show?'Hide transcript':'Show transcript';
+}
+
+/* ═══════════ SCREEN 5 VIDEO + SCRIPT ═══════════ */
+const VSCRIPT=[
+ {sp:'Rob',t:'Hey, Alan. Would you like to come to the match with me on Sunday? It’s Norwich against Chelsea, and I have two tickets.'},
+ {sp:'Alan',t:'Wow! What time’s the match?'},
+ {sp:'Rob',t:'It’s at 4.00.'},
+ {sp:'Alan',t:'Yeah, I’d love to. Thanks.'},
+ {sp:'Rob',t:'Would you like to meet for lunch first?'},
+ {sp:'Alan',t:'Sorry, I can’t. It’s my mum’s birthday, and I need to have lunch with her. But I can meet you there.'},
+ {sp:'Rob',t:'Great. Let’s meet at 3.30 at the entrance to the Tube station.'},
+ {sp:'Alan',t:'Fine. See you there.'},
+ {sp:'Alan',t:'They are playing really badly. I hope the second half is better.'},
+ {sp:'Rob',t:'Me too. I know they can win. Would you like a burger?'},
+ {sp:'Alan',t:'No, thanks. I’m not very hungry.'},
+ {sp:'Rob',t:'How about a coffee?'},
+ {sp:'Alan',t:'Yeah, great.'},
+ {sp:'Rob',t:'A burger and a water, please.'},
+ {sp:'Alan',t:'And I’d like a coffee.'},
+ {sp:'Barman',t:'Milk and sugar?'},
+ {sp:'Alan',t:'Yes, please.'}
+];
+(function buildVScript(){
+  const box=document.getElementById('vscript');
+  box.innerHTML=VSCRIPT.map((l,i)=>'<div class="line" data-l="'+i+'"><span class="spk">'+esc(l.sp)+':</span><span>'+esc(l.t)+'</span></div>').join('');
+  const d1b=document.getElementById('dlg1b');
+  if(d1b)d1b.innerHTML=box.innerHTML;
+})();
+const vid=document.getElementById('pe5video');
+vid.addEventListener('error',()=>{document.getElementById('videoMissing').hidden=false;});
+const fmvid=document.getElementById('fmvideo');
+if(fmvid)fmvid.addEventListener('error',()=>{document.getElementById('fmMissing').hidden=false;});
+const upvid=document.getElementById('upvideo');
+if(upvid)upvid.addEventListener('error',()=>{document.getElementById('upMissing').hidden=false;});
+let vPlaying=false, vStopFlag=false;
+function vPlay(){
+  if(!('speechSynthesis' in window)){showTtsNote();toggleVScript(true);return}
+  if(vPlaying)return;
+  vPlaying=true;vStopFlag=false;updateVBtns();
+  const tr=document.getElementById('vscript'); if(tr.classList.contains('hidden'))toggleVScript();
+  vSpeak(0);
+}
+function vSpeak(i){
+  if(vStopFlag||i>=VSCRIPT.length){vPlaying=false;vStopFlag=false;clearVHl();updateVBtns();return}
+  clearVHl();
+  const el=document.querySelector('#vscript .line[data-l="'+i+'"]'); if(el)el.classList.add('speaking');
+  const u=new SpeechSynthesisUtterance(VSCRIPT[i].t);
+  u.lang='en-GB'; const v=gbVoice(); if(v)u.voice=v; u.rate=.92;
+  u.onend=()=>setTimeout(()=>vSpeak(i+1),260);
+  u.onerror=()=>{vPlaying=false;vStopFlag=true;clearVHl();updateVBtns();};
+  speechSynthesis.speak(u);
+}
+function clearVHl(){document.querySelectorAll('#vscript .speaking').forEach(e=>e.classList.remove('speaking'))}
+function vStop(){vStopFlag=true;speechSynthesis.cancel();vPlaying=false;clearVHl();updateVBtns();}
+function updateVBtns(){document.getElementById('btnVPlay').disabled=vPlaying;document.getElementById('btnVStop').disabled=!vPlaying;}
+function toggleVScript(force){
+  const tr=document.getElementById('vscript'), b=document.getElementById('btnVScript');
+  const show=force===true?true:(force===false?false:tr.classList.contains('hidden'));
+  tr.classList.toggle('hidden',!show);
+  b.textContent=show?'Hide video script':'Show video script';
+}
+function toggle1b(){
+  const d=document.getElementById('dlg1b'), b=document.getElementById('btn1b');
+  const show=d.classList.contains('hidden');
+  d.classList.toggle('hidden',!show);
+  b.textContent=show?'Hide the conversations ↑':'Show the conversations ↓';
+}
+
+/* ═══════════ SOUND EFFECTS ═══════════ */
+let actx=null;
+function tone(f,d,type,g,delay){
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    const t0=actx.currentTime+(delay||0);
+    const o=actx.createOscillator(),v=actx.createGain();
+    o.type=type;o.frequency.value=f;
+    v.gain.setValueAtTime(g,t0);v.gain.exponentialRampToValueAtTime(.0001,t0+d);
+    o.connect(v);v.connect(actx.destination);o.start(t0);o.stop(t0+d);
+  }catch(e){}
+}
+function playOK(){tone(660,.12,'sine',.14);tone(880,.2,'sine',.11,.09);}
+function playErr(){tone(196,.22,'square',.05);}
+
+/* ═══════════ EXERCISE ENGINE ═══════════ */
+const track={};
+function tGet(k){return track[k]||(track[k]={attempts:0,resolved:false,correct:false})}
+const kOf=(ex,it)=>ex+':'+it;
+
+function checkDone(exId){
+  const c=document.getElementById('ex-'+exId); if(!c)return;
+  const items=c.querySelectorAll('[data-item]');
+  let res=0,cor=0;
+  items.forEach(i=>{const t=track[kOf(exId,i.dataset.item)];if(t&&t.resolved){res++;if(t.correct)cor++;}});
+  if(items.length&&res===items.length){
+    const r=c.querySelector('.result');
+    if(r){r.hidden=false;r.textContent=cor+' of '+items.length+' correct';}
+  }
+}
+
+document.addEventListener('click',e=>{
+  const opt=e.target.closest('.opt');
+  if(opt&&!opt.disabled){handleMC(opt);return}
+});
+function handleMC(opt){
+  const q=opt.closest('[data-item]'); if(!q)return;
+  const exId=q.dataset.ex, itemId=q.dataset.item;
+  const t=tGet(kOf(exId,itemId)); if(t.resolved)return;
+  if(opt.dataset.val===q.dataset.correct){
+    t.resolved=true;t.correct=true;
+    opt.classList.add('correct');lockQ(q);playOK();checkDone(exId);
+  }else{
+    t.attempts++;
+    opt.classList.add('wrong');playErr();
+    if(t.attempts>=2){
+      t.resolved=true;t.correct=false;
+      const right=q.querySelector('.opt[data-val="'+q.dataset.correct+'"]');
+      if(right)right.classList.add('correct');
+      lockQ(q);checkDone(exId);
+    }
+    setTimeout(()=>opt.classList.remove('wrong'),650);
+  }
+}
+function lockQ(q){q.querySelectorAll('.opt').forEach(o=>o.disabled=true)}
+
+/* DRAG & TAP SORTING / GAP FILL */
+let selected=null, dragItem=null;
+document.addEventListener('click',e=>{
+  const it=e.target.closest('.sitem');
+  if(it&&it.draggable&&!it.classList.contains('locked')){
+    if(e.target.closest('.w'))return;
+    if(selected===it){it.classList.remove('sel');selected=null;clearZActive();}
+    else{if(selected)selected.classList.remove('sel');clearZActive();selected=it;it.classList.add('sel');setZActive(it,true);}
+    return;
+  }
+  const z=e.target.closest('.zone');
+  if(z&&selected&&!it){tryPlace(selected,z);return}
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){
+    const it=e.target.closest&&e.target.closest('.sitem');
+    if(it&&it.draggable&&!it.classList.contains('locked')){e.preventDefault();it.click();}
+  }
+});
+function setZActive(item,on){
+  const exId=item.dataset.ex;
+  document.querySelectorAll('#ex-'+exId+' .zone').forEach(z=>z.classList.toggle('zactive',on));
+}
+function clearZActive(){document.querySelectorAll('.zone.zactive').forEach(z=>z.classList.remove('zactive'))}
+function tryPlace(item,zone){
+  if(zone.closest('#ex-'+item.dataset.ex)!==document.getElementById('ex-'+item.dataset.ex))return;
+  const exId=item.dataset.ex, itemId=item.dataset.item;
+  const t=tGet(kOf(exId,itemId)); if(t.resolved){clearSel();return}
+  if(item.dataset.val===zone.dataset.zone){
+    t.resolved=true;t.correct=true;
+    put(item,zone,'placed');clearSel();playOK();
+    const word=item.textContent.trim(); if(word) speak(word);
+    checkDone(exId);
+  }else{
+    t.attempts++;playErr();
+    item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),650);
+    if(t.attempts>=2){
+      t.resolved=true;t.correct=false;
+      const right=document.querySelector('#ex-'+exId+' .zone[data-zone="'+item.dataset.val+'"]');
+      if(right){put(item,right,'revealed');}
+      clearSel();checkDone(exId);
+    }else{clearSel();}
+  }
+}
+function put(item,zone,cls){
+  const zi=zone.querySelector('.zone-items');
+  (zi||zone).appendChild(item);
+  item.classList.remove('sel');item.classList.add('locked',cls);
+  item.draggable=false;
+}
+function clearSel(){if(selected){selected.classList.remove('sel');selected=null}clearZActive();}
+
+document.addEventListener('dragstart',e=>{
+  const it=e.target.closest('.sitem');
+  if(it&&it.draggable&&!it.classList.contains('locked')){dragItem=it;e.dataTransfer.setData('text/plain',it.dataset.item);e.dataTransfer.effectAllowed='move';}
+});
+document.addEventListener('dragend',()=>{dragItem=null;document.querySelectorAll('.drop-hot').forEach(z=>z.classList.remove('drop-hot'))});
+document.addEventListener('dragover',e=>{
+  const z=e.target.closest('.zone');
+  if(z&&dragItem&&z.closest('#ex-'+dragItem.dataset.ex)){e.preventDefault();z.classList.add('drop-hot');}
+});
+document.addEventListener('dragleave',e=>{const z=e.target.closest('.zone');if(z)z.classList.remove('drop-hot')});
+document.addEventListener('drop',e=>{
+  const z=e.target.closest('.zone');
+  if(z&&dragItem){e.preventDefault();z.classList.remove('drop-hot');tryPlace(dragItem,z);dragItem=null;}
+});
+
+function resetEx(exId){
+  const c=document.getElementById('ex-'+exId); if(!c)return;
+  Object.keys(track).forEach(k=>{if(k.startsWith(exId+':'))delete track[k]});
+  c.querySelectorAll('.opt').forEach(o=>{o.disabled=false;o.classList.remove('correct','wrong')});
+  const tray=c.querySelector('.tray');
+  c.querySelectorAll('.sitem').forEach(i=>{
+    i.classList.remove('locked','placed','sel','revealed','wrong');
+    i.draggable=true;
+    if(tray&&!tray.contains(i))tray.appendChild(i);
+  });
+  c.querySelectorAll('.zone').forEach(z=>z.classList.remove('zactive','drop-hot'));
+  const r=c.querySelector('.result'); if(r){r.hidden=true;r.textContent='';}
+  selected=null;
+}
+
+/* ═══════════ WARM-UP PICKS ═══════════ */
+function pickOne(btn){
+  document.querySelectorAll('.pick').forEach(p=>{p.classList.remove('chosen');p.setAttribute('aria-pressed','false')});
+  btn.classList.add('chosen');btn.setAttribute('aria-pressed','true');
+}
+
+/* ═══════════ VOCABULARY MODAL ═══════════ */
+function openCard(id){
+  const v=VOCAB[id]; if(!v)return;
+  const sheet=document.getElementById('vsheet');
+  sheet.innerHTML=
+    '<button class="close" onclick="closeModal()" aria-label="Close card">✕</button>'+
+    (v.img?'<svg class="thumb" role="img" aria-label="Picture for '+esc(v.w)+'"><use href="#'+v.img+'"/></svg>':'')+
+    '<div class="head" id="vmTitle">'+esc(v.w)+'</div>'+
+    '<div class="ipa">'+esc(v.ipa||'')+'</div>'+
+    '<div class="row-audio"><button class="btn-audio" onclick="speak(\''+esc(v.w).replace(/'/g,"\\'")+'\')">🔊 British audio</button>'+
+    (v.pos?'<span class="pos">'+esc(v.pos)+'</span>':'')+'</div>'+
+    '<div class="def">'+esc(v.def)+'</div>'+
+    (v.ex||[]).map(x=>'<div class="exq">'+esc(x)+'</div>').join('')+
+    '<button class="btn-trans" id="btnTrans" onclick="toggleTrans()">View translation</button>'+
+    '<div class="trans hidden" id="transBox">'+esc(v.ru||'')+'</div>';
+  document.getElementById('vmodal').classList.remove('hidden');
+  sheet.querySelector('.close').focus();
+}
+function toggleTrans(){
+  const b=document.getElementById('btnTrans'),t=document.getElementById('transBox');
+  const show=t.classList.contains('hidden');
+  t.classList.toggle('hidden',!show);
+  b.textContent=show?'Hide translation':'View translation';
+}
+function closeModal(){document.getElementById('vmodal').classList.add('hidden')}
+document.addEventListener('click',e=>{
+  const w=e.target.closest('.w');
+  if(w&&w.dataset.v){e.stopPropagation();openCard(w.dataset.v);}
+});
+document.addEventListener('keydown',e=>{
+  const w=e.target.closest?e.target.closest('.w'):null;
+  if(w&&w.dataset.v&&(e.key==='Enter'||e.key===' ')){e.preventDefault();e.stopPropagation();openCard(w.dataset.v);}
+  if(e.key==='Escape'){closeModal();closeTeacher();}
+});
+
+/* ═══════════ TEACHER PANEL ═══════════ */
+document.getElementById('btnTeacher').addEventListener('click',()=>{document.getElementById('tmodal').classList.remove('hidden');document.querySelector('#tmodal .close').focus();});
+function closeTeacher(){document.getElementById('tmodal').classList.add('hidden')}
+
+/* ═══════════ HOMEWORK ANSWERS ═══════════ */
+function toggleHwAnswers(){
+  const a=document.getElementById('hwAnswers'),b=document.getElementById('btnHw');
+  const show=a.classList.contains('hidden');
+  a.classList.toggle('hidden',!show);
+  b.textContent=show?'Hide answers ↑':'Check answers ↓';
+}
+
+/* ═══════════ NAVIGATION ═══════════ */
+const screens=[...document.querySelectorAll('.screen')];
+let cur=0;
+function go(d){show(cur+d)}
+function show(n){
+  cur=Math.max(0,Math.min(screens.length-1,n));
+  screens.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  const s=screens[cur];
+  document.getElementById('counter').textContent='Screen '+(cur+1)+' of '+screens.length+' · '+s.dataset.stage;
+  document.getElementById('progBar').style.width=((cur+1)/screens.length*100)+'%';
+  document.getElementById('btnBack').disabled=(cur===0);
+  document.getElementById('btnNext').disabled=(cur===screens.length-1);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+buildVocabLists();
+show(0);
+</script>
+</body>
+</html>
